@@ -3,6 +3,9 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
+    "apidoc": "apidoc -i routes -o docs",
+    "apidoc:watch": "onchange routes/**/*.js -- npm run apidoc",
+    "dev": "concurrently \"npm run nodemon\" \"npm run apidoc:watch\"",
     "nodemon": "nodemon",
     "start": "node ./bin/www"
   },
@@ -12,10 +15,17 @@
     "express": "~4.14.1",
     "jade": "~1.11.0",
     "mongoose": "^4.8.4",
+    "mongoose-integer": "^0.1.1",
     "morgan": "~1.7.0",
     "serve-favicon": "~2.3.2"
   },
   "devDependencies": {
-    "nodemon": "^1.11.0"
+    "apidoc": "^0.17.5",
+    "concurrently": "^3.3.0",
+    "nodemon": "^1.11.0",
+    "onchange": "^3.2.1"
+  },
+  "engines": {
+    "node": "6.x"
   }
 }

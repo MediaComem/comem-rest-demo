@@ -2,26 +2,31 @@ const bodyParser = require('body-parser');
 const express = require('express');
 const favicon = require('serve-favicon');
 const logger = require('morgan');
+const mongoose = require('mongoose');
 const path = require('path');
 
-const index = require('./routes/index');
-const actorsApi = require('./routes/api/actors');
+const charactersApi = require('./routes/characters');
+const moviesApi = require('./routes/movies');
 
 const app = express();
+
+if (process.env.DEBUG) {
+  mongoose.set('debug', true);
+}
 
 // View engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 
-// uncomment after placing your favicon in /public
-//app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
+// General middleware
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, 'docs')));
 
-app.use('/api/actors', actorsApi);
-app.use('/', index);
+// REST API routes
+app.use('/api/characters', charactersApi);
+app.use('/api/movies', moviesApi);
 
 // Catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -32,7 +37,16 @@ app.use(function(req, res, next) {
 
 // API error handler (responds with JSON)
 app.use('/api', function(err, req, res, next) {
+
   res.status(err.status || 500);
+
+  if (err.status == 422) {
+    return res.send({
+      message: err.message,
+      errors: err.errors
+    });
+  }
+
   res.send({
     message: err.message,
     error: req.app.get('env') === 'development' ? err : {}

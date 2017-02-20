@@ -1,0 +1,7 @@
+{
+  "name": "Express REST Demo",
+  "version": "1.0.0",
+  "description": "A REST API developed with Express",
+  "title": "Express REST Demo",
+  "url" : "https://api.example.com"
+}
