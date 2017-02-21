@@ -79,6 +79,10 @@ router.get('/', function(req, res, next) {
   });
 });
 
+router.get('/:id', loadPersonFromParams, function(req, res, next) {
+  res.send(req.person);
+});
+
 router.patch('/:id', loadPersonFromParams, function(req, res, next) {
   if (req.body.name !== undefined) {
     req.person.name = req.body.name;

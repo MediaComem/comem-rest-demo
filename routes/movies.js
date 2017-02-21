@@ -30,6 +30,10 @@ router.get('/', function(req, res, next) {
   });
 });
 
+router.get('/:id', loadMovieFromParams, function(req, res, next) {
+  res.send(req.movie);
+});
+
 router.patch('/:id', loadMovieFromParams, function(req, res, next) {
   if (req.body.title !== undefined) {
     req.movie.title = req.body.title;
