@@ -1,7 +1,7 @@
 {
   "name": "Express REST Demo",
   "version": "1.0.0",
-  "description": "A REST API developed with Express",
+  "description": "A demonstration REST API developed with Express",
   "title": "Express REST Demo",
   "url" : "https://evening-meadow-25867.herokuapp.com"
 }
