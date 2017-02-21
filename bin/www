@@ -14,7 +14,7 @@ app.set('port', port);
 const server = http.createServer(app);
 
 // Connect to the database (can be overriden from environment)
-mongoose.connect(process.env.DATABASE_URL || 'mongodb://localhost/comem-webdev-express-rest-demo');
+mongoose.connect(process.env.DATABASE_URL || process.env.MONGODB_URI || 'mongodb://localhost/comem-webdev-express-rest-demo');
 
 // Listen on provided port, on all network interfaces
 server.listen(port);
