@@ -95,6 +95,9 @@ router.patch('/:id', loadPersonFromParams, function(req, res, next) {
   }
   req.person.save(function(err, savedPerson) {
     if (err) {
+      if (err.name == 'ValidationError') {
+        err.status = 422;
+      }
       return next(err);
     }
 
@@ -108,6 +111,9 @@ router.put('/:id', loadPersonFromParams, function(req, res, next) {
   req.person.birthDate = req.body.birthDate;
   req.person.save(function(err, savedPerson) {
     if (err) {
+      if (err.name == 'ValidationError') {
+        err.status = 422;
+      }
       return next(err);
     }
 

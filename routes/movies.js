@@ -43,6 +43,9 @@ router.patch('/:id', loadMovieFromParams, function(req, res, next) {
   }
   req.movie.save(function(err, savedMovie) {
     if (err) {
+      if (err.name == 'ValidationError') {
+        err.status = 422;
+      }
       return next(err);
     }
 
@@ -56,6 +59,9 @@ router.put('/:id', loadMovieFromParams, function(req, res, next) {
   req.movie.rating = req.body.rating;
   req.movie.save(function(err, savedMovie) {
     if (err) {
+      if (err.name == 'ValidationError') {
+        err.status = 422;
+      }
       return next(err);
     }
 
