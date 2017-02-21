@@ -122,6 +122,7 @@ router.put('/:id', loadPersonFromParams, function(req, res, next) {
 });
 
 router.delete('/:id', loadPersonFromParams, function(req, res, next) {
+  // TODO: 409 conflict if linked with movies
   req.person.remove(function(err) {
     if (err) {
       return next(err);
