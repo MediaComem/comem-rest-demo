@@ -52,7 +52,7 @@ router.post('/', function(req, res, next) {
       return next(err);
     }
 
-    res.status(201).send(savedPerson);
+    res.status(201).set('Location', `/people/${savedPerson._id}`).send(savedPerson);
   });
 });
 
