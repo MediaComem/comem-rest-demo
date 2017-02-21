@@ -1,4 +1,3 @@
-const Character = require('../models/character');
 const debug = require('debug')('demo:movies');
 const Movie = require('../models/movie');
 const express = require('express');
@@ -27,24 +26,11 @@ router.get('/', function(req, res, next) {
       return next(err);
     }
 
-    countCharacters(movies, function(err, results) {
-      if (err) {
-        return next(err);
-      }
-
-      movies = movies.map(movie => movie.toJSON());
-
-      results.forEach(function(result) {
-        const movie = movies.find(movie => movie._id.toString() == result._id.toString());
-        movie.charactersCount = result.charactersCount;
-      });
-
-      res.send(movies);
-    });
+    res.send(movies);
   });
 });
 
-router.patch('/:id', loadMovie, function(req, res, next) {
+router.patch('/:id', loadMovieFromParams, function(req, res, next) {
   if (req.body.title !== undefined) {
     req.movie.title = req.body.title;
   }
@@ -61,7 +47,7 @@ router.patch('/:id', loadMovie, function(req, res, next) {
   });
 });
 
-router.put('/:id', loadMovie, function(req, res, next) {
+router.put('/:id', loadMovieFromParams, function(req, res, next) {
   req.movie.title = req.body.title;
   req.movie.rating = req.body.rating;
   req.movie.save(function(err, savedMovie) {
@@ -74,7 +60,7 @@ router.put('/:id', loadMovie, function(req, res, next) {
   });
 });
 
-router.delete('/:id', loadMovie, function(req, res, next) {
+router.delete('/:id', loadMovieFromParams, function(req, res, next) {
   req.movie.remove(function(err) {
     if (err) {
       return next(err);
@@ -85,7 +71,7 @@ router.delete('/:id', loadMovie, function(req, res, next) {
   });
 });
 
-function loadMovie(req, res, next) {
+function loadMovieFromParams(req, res, next) {
   if (!ObjectId.isValid(req.params.id)) {
     return res.status(404).send('No movie found with ID ' + req.params.id);
   }
@@ -100,26 +86,6 @@ function loadMovie(req, res, next) {
     req.movie = movie;
     next();
   });
-}
-
-function countCharacters(movies, callback) {
-  Character.aggregate([
-    {
-      $match: {
-        movie: {
-          $in: movies.map(movie => movie._id)
-        }
-      }
-    },
-    {
-      $group: {
-        _id: '$movie',
-        charactersCount: {
-          $sum: 1
-        }
-      }
-    }
-  ], callback);
 }
 
 module.exports = router;

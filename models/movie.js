@@ -1,9 +1,12 @@
 const mongoose = require('mongoose');
+const mongooseInteger = require('mongoose-integer');
+const ObjectId = mongoose.Types.ObjectId;
+const Schema = mongoose.Schema;
 
 /**
- * A movie with a rating and reviews.
+ * A movie directed by a person.
  */
-const movieSchema = new mongoose.Schema({
+const movieSchema = new Schema({
   title: {
     type: String,
     required: true,
@@ -20,25 +23,31 @@ const movieSchema = new mongoose.Schema({
     type: Date,
     default: Date.now
   },
-  reviews: [
-    {
-      author: {
-        type: String,
-        minlength: 3,
-        maxlength: 30
-      },
-      comment: {
-        type: String,
-        required: true,
-        minlength: 3,
-        maxlength: 10000
-      },
-      postedAt: {
-        type: Date,
-        default: Date.now
-      }
+  director: {
+    type: Schema.Types.ObjectId,
+    required: true,
+    ref: 'Person',
+    validate: {
+      validator: validateDirector,
+      message: '{VALUE} is not a valid person ID'
     }
-  ]
+  }
 });
+
+movieSchema.plugin(mongooseInteger);
+
+function validateDirector(value, callback) {
+  if (!ObjectId.isValid(value)) {
+    return false;
+  }
+
+  mongoose.model('Person').findOne({ _id: ObjectId(value) }).exec(function(err, person) {
+    if (err) {
+      return callback(false);
+    }
+
+    callback(person);
+  });
+}
 
 module.exports = mongoose.model('Movie', movieSchema);
