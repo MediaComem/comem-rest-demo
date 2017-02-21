@@ -16,7 +16,7 @@ router.post('/', function(req, res, next) {
     }
 
     debug(`Created movie "${savedMovie.title}"`);
-    res.status(201).set('Location', `/movies/${savedMovie._id}`).send(savedMovie);
+    res.status(201).set('Location', `/api/movies/${savedMovie._id}`).send(savedMovie);
   });
 });
 
