@@ -16,7 +16,7 @@ A demonstration REST web service implemented with [Express][express].
 git clone git@github.com:MediaComem/comem-webdev-express-rest-demo.git
 cd comem-webdev-express-rest-demo
 npm install
-npm start
+DEBUG=demo:* npm start
 ```
 
 Visit [http://localhost:3000](http://localhost:3000).
