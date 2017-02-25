@@ -1,8 +1,9 @@
-const Movie = require('../models/movie');
 const express = require('express');
 const mongoose = require('mongoose');
 const ObjectId = mongoose.Types.ObjectId;
+const Movie = require('../models/movie');
 const Person = require('../models/person');
+const utils = require('./utils');
 
 const router = express.Router();
 
@@ -57,24 +58,37 @@ router.post('/', function(req, res, next) {
 });
 
 router.get('/', function(req, res, next) {
-  Person.find().sort({ name: 1 }).exec(function(err, people) {
+
+  const countQuery = queryPeople(req);
+  countQuery.count(function(err, total) {
     if (err) {
       return next(err);
     }
 
-    countMoviesDirectedBy(people, function(err, results) {
+    res.set('Pagination-Total', total);
+
+    let query = queryPeople(req);
+    query = utils.paginate(query, req, res);
+
+    query.sort({ name: 1 }).exec(function(err, people) {
       if (err) {
         return next(err);
       }
 
-      people = people.map(person => person.toJSON());
+      countMoviesDirectedBy(people, function(err, results) {
+        if (err) {
+          return next(err);
+        }
 
-      results.forEach(function(result) {
-        const person = people.find(person => person._id.toString() == result._id.toString());
-        person.directedMoviesCount = result.moviesCount;
+        people = people.map(person => person.toJSON());
+
+        results.forEach(function(result) {
+          const person = people.find(person => person.id == result._id.toString());
+          person.directedMoviesCount = result.moviesCount;
+        });
+
+        res.send(people);
       });
-
-      res.send(people);
     });
   });
 });
@@ -131,6 +145,10 @@ router.delete('/:id', loadPersonFromParams, function(req, res, next) {
     res.sendStatus(204);
   });
 });
+
+function queryPeople(req) {
+  return Person.find();
+}
 
 function loadPersonFromParams(req, res, next) {
 

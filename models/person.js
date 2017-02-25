@@ -27,4 +27,14 @@ const personSchema = new Schema({
   }
 });
 
+personSchema.set('toJSON', { transform: transformJsonPerson, virtuals: true });
+
+function transformJsonPerson(doc, json, options) {
+
+  delete json._id;
+  delete json.__v;
+
+  return json;
+}
+
 module.exports = mongoose.model('Person', personSchema);

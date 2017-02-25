@@ -7,7 +7,7 @@ const path = require('path');
 
 const moviesApi = require('./routes/movies');
 const peopleApi = require('./routes/people');
-const utilsRoutes = require('./routes/utils');
+const adminRoutes = require('./routes/admin');
 
 const app = express();
 
@@ -28,7 +28,7 @@ app.use(express.static(path.join(__dirname, 'docs')));
 // REST API routes
 app.use('/api/movies', moviesApi);
 app.use('/api/people', peopleApi);
-app.use('/utils', utilsRoutes);
+app.use('/admin', adminRoutes);
 
 // Catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -48,6 +48,8 @@ app.use('/api', function(err, req, res, next) {
       errors: err.errors
     });
   }
+
+  console.warn(err);
 
   res.send({
     message: err.message,

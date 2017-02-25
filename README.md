@@ -1,6 +1,6 @@
 # COMEM+ Web Development Express REST Demo
 
-A demonstration REST web service implemented with [Express][express].
+A demonstration RESTful API implemented with [Express][express].
 
 
 
@@ -22,6 +22,14 @@ DEBUG=demo:* npm start
 Visit [http://localhost:3000](http://localhost:3000).
 
 To automatically reload the code and re-generate the API documentation on changes, use `npm run dev` instead of `npm start`.
+
+
+
+## Resources
+
+This API allows you to work with **Movies** and **People**:
+
+* A **Movie** MUST have one **director** (who is a Person)
 
 
 

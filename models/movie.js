@@ -25,29 +25,66 @@ const movieSchema = new Schema({
   },
   director: {
     type: Schema.Types.ObjectId,
-    required: true,
     ref: 'Person',
+    default: null,
     validate: {
-      validator: validateDirector,
-      message: '{VALUE} is not a valid person ID'
+      validator: validateDirector
     }
   }
 });
 
 movieSchema.plugin(mongooseInteger);
 
+movieSchema.virtual('directorUrl').get(getDirectorUrl).set(setDirectorUrl);
+
+movieSchema.set('toJSON', { transform: transformJsonMovie, virtuals: true });
+
 function validateDirector(value, callback) {
-  if (!ObjectId.isValid(value)) {
-    return false;
+  if (!value && !this._directorUrl) {
+    this.invalidate('directorUrl', 'Path `directorUrl` is required', value, 'required');
+    return callback();
+  } else if (!ObjectId.isValid(value)) {
+    this.invalidate('directorUrl', 'Path `directorUrl` is not a valid Person URL', this._directorUrl, 'resourceNotFound');
+    return callback();
   }
 
   mongoose.model('Person').findOne({ _id: ObjectId(value) }).exec(function(err, person) {
-    if (err) {
-      return callback(false);
+    if (err || !person) {
+      this.invalidate('directorUrl', 'Path `directorUrl` does not reference a Person that exists', this._directorUrl, 'resourceNotFound');
     }
 
-    callback(person);
+    callback();
   });
+}
+
+function getDirectorUrl() {
+  return `/api/people/${this.director._id || this.director}`;
+}
+
+function setDirectorUrl(value) {
+
+  let match;
+  if (typeof(value) == 'string' && (match = value.match(/^\/api\/people\/([^\/]+)$/)) && ObjectId.isValid(match[1])) {
+    this.director = match[1];
+  } else {
+    this.director = null;
+  }
+
+  this._directorUrl = value;
+}
+
+function transformJsonMovie(doc, json, options) {
+
+  delete json._id;
+  delete json.__v;
+
+  if (json.director instanceof ObjectId) {
+    delete json.director;
+  } else {
+    json.director = doc.director.toJSON();
+  }
+
+  return json;
 }
 
 module.exports = mongoose.model('Movie', movieSchema);

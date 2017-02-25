@@ -1,8 +1,9 @@
 const debug = require('debug')('demo:movies');
-const Movie = require('../models/movie');
 const express = require('express');
 const mongoose = require('mongoose');
+const Movie = require('../models/movie');
 const ObjectId = mongoose.Types.ObjectId;
+const utils = require('./utils');
 
 const router = express.Router();
 
@@ -21,12 +22,29 @@ router.post('/', function(req, res, next) {
 });
 
 router.get('/', function(req, res, next) {
-  Movie.find().sort({ title: 1 }).exec(function(err, movies) {
+
+  const countQuery = queryMovies(req);
+  countQuery.count(function(err, total) {
     if (err) {
       return next(err);
     }
 
-    res.send(movies);
+    res.set('Pagination-Total', total);
+
+    let query = queryMovies(req);
+    query = utils.paginate(query, req, res);
+
+    if (utils.responseShouldInclude(req, 'director')) {
+      query = query.populate('director');
+    }
+
+    query.sort({ title: 1 }).exec(function(err, movies) {
+      if (err) {
+        return next(err);
+      }
+
+      res.send(movies);
+    });
   });
 });
 
@@ -35,12 +53,14 @@ router.get('/:id', loadMovieFromParams, function(req, res, next) {
 });
 
 router.patch('/:id', loadMovieFromParams, function(req, res, next) {
+
   if (req.body.title !== undefined) {
     req.movie.title = req.body.title;
   }
   if (req.body.rating !== undefined) {
     req.movie.rating = req.body.rating;
   }
+
   req.movie.save(function(err, savedMovie) {
     if (err) {
       if (err.name == 'ValidationError') {
@@ -55,8 +75,10 @@ router.patch('/:id', loadMovieFromParams, function(req, res, next) {
 });
 
 router.put('/:id', loadMovieFromParams, function(req, res, next) {
+
   req.movie.title = req.body.title;
   req.movie.rating = req.body.rating;
+
   req.movie.save(function(err, savedMovie) {
     if (err) {
       if (err.name == 'ValidationError') {
@@ -80,6 +102,32 @@ router.delete('/:id', loadMovieFromParams, function(req, res, next) {
     res.sendStatus(204);
   });
 });
+
+function queryMovies(req) {
+
+  var query = Movie.find();
+
+  if (Array.isArray(req.query.director)) {
+    const directors = req.query.director.filter(ObjectId.isValid);
+    query = query.where('director').in(directors);
+  } else if (ObjectId.isValid(req.query.director)) {
+    query = query.where('director').equals(req.query.director);
+  }
+
+  if (!isNaN(req.query.rating)) {
+    query = query.where('rating').equals(req.query.rating);
+  }
+
+  if (!isNaN(req.query.ratingAtLeast)) {
+    query = query.where('rating').gte(req.query.ratingAtLeast);
+  }
+
+  if (!isNaN(req.query.ratingAtMost)) {
+    query = query.where('rating').lte(req.query.ratingAtMost);
+  }
+
+  return query;
+}
 
 function loadMovieFromParams(req, res, next) {
   if (!ObjectId.isValid(req.params.id)) {

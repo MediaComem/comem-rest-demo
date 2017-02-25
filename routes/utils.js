@@ -1,40 +1,34 @@
-const _ = require('lodash');
-const express = require('express');
-const mongoose = require('mongoose');
-const Movie = require('../models/movie');
-const ObjectId = mongoose.Types.ObjectId;
-const Person = require('../models/person');
+exports.paginate = function(query, req, res) {
 
-const router = express.Router();
-
-router.post('/reset', authenticate, function(req, res, next) {
-  removeAll().then(() => res.sendStatus(204)).catch(next);
-});
-
-function authenticate(req, res, next) {
-  if (!process.env.AUTH_TOKEN) {
-    return res.sendStatus(401);
+  let start = parseInt(req.query.start, 10);
+  if (isNaN(start) || start < 0) {
+    start = 0;
   }
 
-  const authorizationHeader = req.get('Authorization');
-  if (!authorizationHeader) {
-    return res.sendStatus(401);
+  query = query.skip(start);
+  res.set('Pagination-Start', start);
+
+  let number = parseInt(req.query.number, 10);
+  if (isNaN(number) || number < 0 || number > 100) {
+    number = 100;
   }
 
-  const match = authorizationHeader.match(/^Bearer +(.+)$/);
-  if (!match) {
-    return res.sendStatus(401);
+  query = query.limit(number);
+  res.set('Pagination-Number', number);
+
+  return query;
+};
+
+exports.responseShouldInclude = function(req, property) {
+
+  let propertiesToInclude = req.query.include;
+  if (!propertiesToInclude) {
+    return false;
   }
 
-  if (match[1] != process.env.AUTH_TOKEN) {
-    return res.sendStatus(401);
+  if (!Array.isArray(propertiesToInclude)) {
+    propertiesToInclude = [ propertiesToInclude ];
   }
 
-  next();
-}
-
-function removeAll() {
-  return Movie.remove({}).then(() => Person.remove({}));
-}
-
-module.exports = router;
+  return propertiesToInclude.indexOf(property) >= 0;
+};

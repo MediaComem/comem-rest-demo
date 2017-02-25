@@ -6,7 +6,7 @@
     "apidoc": "apidoc -i routes -o docs",
     "apidoc:watch": "onchange routes/**/*.js -- npm run apidoc",
     "dev": "concurrently \"npm run nodemon\" \"npm run apidoc:watch\"",
-    "nodemon": "nodemon",
+    "nodemon": "DEBUG=demo:* AUTH_TOKEN=secret nodemon",
     "start": "node ./bin/www"
   },
   "dependencies": {
