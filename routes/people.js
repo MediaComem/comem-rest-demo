@@ -1,3 +1,4 @@
+const config = require('../config');
 const express = require('express');
 const mongoose = require('mongoose');
 const ObjectId = mongoose.Types.ObjectId;
@@ -53,7 +54,7 @@ router.post('/', function(req, res, next) {
       return next(err);
     }
 
-    res.status(201).set('Location', `/api/people/${savedPerson._id}`).send(savedPerson);
+    res.status(201).set('Location', `${config.baseUrl}/api/people/${savedPerson._id}`).send(savedPerson);
   });
 });
 

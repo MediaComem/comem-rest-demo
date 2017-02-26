@@ -1,3 +1,4 @@
+const config = require('../config');
 const debug = require('debug')('demo:movies');
 const express = require('express');
 const mongoose = require('mongoose');
@@ -17,7 +18,7 @@ router.post('/', function(req, res, next) {
     }
 
     debug(`Created movie "${savedMovie.title}"`);
-    res.status(201).set('Location', `/api/movies/${savedMovie._id}`).send(savedMovie);
+    res.status(201).set('Location', `${config.baseUrl}/api/movies/${savedMovie._id}`).send(savedMovie);
   });
 });
 

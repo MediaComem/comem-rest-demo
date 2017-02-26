@@ -2,19 +2,20 @@
 
 // Module dependencies
 const app = require('../app');
+const config = require('../config');
 const debug = require('debug')('demo:server');
 const http = require('http');
 const mongoose = require('mongoose');
 
 // Get port from environment and store in Express
-const port = normalizePort(process.env.PORT || '3000');
+const port = normalizePort(config.port);
 app.set('port', port);
 
 // Create HTTP server
 const server = http.createServer(app);
 
 // Connect to the database (can be overriden from environment)
-mongoose.connect(process.env.DATABASE_URL || process.env.MONGODB_URI || 'mongodb://localhost/comem-webdev-express-rest-demo');
+mongoose.connect(config.databaseUrl);
 
 // Listen on provided port, on all network interfaces
 server.listen(port);
