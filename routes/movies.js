@@ -105,7 +105,7 @@ router.delete('/:id', loadMovieFromParams, function(req, res, next) {
 
 function queryMovies(req) {
 
-  var query = Movie.find();
+  let query = Movie.find();
 
   if (Array.isArray(req.query.director)) {
     const directors = req.query.director.filter(ObjectId.isValid);
@@ -136,7 +136,7 @@ function loadMovieFromParams(req, res, next) {
     return movieNotFound(res, movieId);
   }
 
-  Movie.findById(movieId).exec(function(err, movie) {
+  Movie.findById(movieId, function(err, movie) {
     if (err) {
       return next(err);
     } else if (!movie) {

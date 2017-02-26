@@ -1,9 +1,14 @@
 const bodyParser = require('body-parser');
+const config = require('./config');
 const express = require('express');
 const favicon = require('serve-favicon');
 const logger = require('morgan');
 const mongoose = require('mongoose');
 const path = require('path');
+
+// Connect to the database (can be overriden from environment)
+mongoose.Promise = Promise;
+mongoose.connect(config.databaseUrl);
 
 const moviesApi = require('./routes/movies');
 const peopleApi = require('./routes/people');
@@ -19,7 +24,7 @@ if (process.env.DEBUG) {
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 
-// General middleware
+// General middlewares
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -40,21 +45,29 @@ app.use(function(req, res, next) {
 // API error handler (responds with JSON)
 app.use('/api', function(err, req, res, next) {
 
-  res.status(err.status || 500);
-
-  if (err.status == 422) {
-    return res.send({
-      message: err.message,
-      errors: err.errors
-    });
-  }
-
+  // Log the error on stderr
   console.warn(err);
 
-  res.send({
-    message: err.message,
-    error: req.app.get('env') === 'development' ? err : {}
-  });
+  // Respond with 422 Unprocessable Entity if it's a Mongoose validation error
+  if (err.name == 'ValidationError' && !err.status) {
+    err.status = 422;
+  }
+
+  // Set the response status code
+  res.status(err.status || 500);
+
+  // Send the error message in the response
+  const response = {
+    message: err.message
+  };
+
+  // If it's a validation error, also send the errors details from Mongoose
+  if (err.status == 422) {
+    response.errors = err.errors;
+  }
+
+  // Send the error response
+  res.send(response);
 });
 
 // Generic error handler (responds with HTML)
