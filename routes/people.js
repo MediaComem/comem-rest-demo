@@ -199,8 +199,8 @@ router.get('/:id', loadPersonFromParams, function(req, res, next) {
  * @apiDescription Partially updates a person (only the properties found in the request body will be updated).
  *
  * @apiParam (URL path parameters) {String} id The unique identifier of the person to retrieve
- * @apiParam (Request body) {String{3..30}} name The name of the person
- * @apiParam (Request body) {String="male,female"} gender The gender of the person
+ * @apiParam (Request body) {String{3..30}} [name] The name of the person
+ * @apiParam (Request body) {String="male,female"} [gender] The gender of the person
  * @apiParam (Request body) {String} [birthDate] The birth date of the person ([ISO-8601](https://en.wikipedia.org/wiki/ISO_8601) format)
  *
  * @apiExample Example
