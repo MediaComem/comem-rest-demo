@@ -35,42 +35,42 @@ const movieSchema = new Schema({
 
 movieSchema.plugin(mongooseInteger);
 
-movieSchema.virtual('directorUrl').get(getDirectorUrl).set(setDirectorUrl);
+movieSchema.virtual('directorHref').get(getDirectorHref).set(setDirectorHref);
 
 movieSchema.set('toJSON', { transform: transformJsonMovie, virtuals: true });
 
 function validateDirector(value, callback) {
-  if (!value && !this._directorUrl) {
-    this.invalidate('directorUrl', 'Path `directorUrl` is required', value, 'required');
+  if (!value && !this._directorHref) {
+    this.invalidate('directorHref', 'Path `directorHref` is required', value, 'required');
     return callback();
   } else if (!ObjectId.isValid(value)) {
-    this.invalidate('directorUrl', 'Path `directorUrl` is not a valid Person URL', this._directorUrl, 'resourceNotFound');
+    this.invalidate('directorHref', 'Path `directorHref` is not a valid Person reference', this._directorHref, 'resourceNotFound');
     return callback();
   }
 
   mongoose.model('Person').findOne({ _id: ObjectId(value) }).exec(function(err, person) {
     if (err || !person) {
-      this.invalidate('directorUrl', 'Path `directorUrl` does not reference a Person that exists', this._directorUrl, 'resourceNotFound');
+      this.invalidate('directorHref', 'Path `directorHref` does not reference a Person that exists', this._directorHref, 'resourceNotFound');
     }
 
     callback();
   });
 }
 
-function getDirectorUrl() {
+function getDirectorHref() {
   return `/api/people/${this.director._id || this.director}`;
 }
 
-function setDirectorUrl(value) {
+function setDirectorHref(value) {
 
-  let match;
-  if (typeof(value) == 'string' && (match = value.match(/^\/api\/people\/([^\/]+)$/)) && ObjectId.isValid(match[1])) {
-    this.director = match[1];
+  this._directorHref = value;
+
+  value = value.replace(/^\/api\/people\//, '');
+  if (ObjectId.isValid(value)) {
+    this.director = value;
   } else {
     this.director = null;
   }
-
-  this._directorUrl = value;
 }
 
 function transformJsonMovie(doc, json, options) {
