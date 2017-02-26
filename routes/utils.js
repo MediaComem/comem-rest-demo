@@ -1,20 +1,38 @@
-exports.paginate = function(query, req, res) {
+const config = require('../config');
+const formatLinkHeader = require('format-link-header');
 
-  let start = parseInt(req.query.start, 10);
-  if (isNaN(start) || start < 0) {
-    start = 0;
+exports.paginate = function(resourceHref, query, total, req, res) {
+
+  let page = parseInt(req.query.page, 10);
+  if (isNaN(page) || page < 1) {
+    page = 1;
   }
 
-  query = query.skip(start);
-  res.set('Pagination-Start', start);
-
-  let number = parseInt(req.query.number, 10);
-  if (isNaN(number) || number < 0 || number > 100) {
-    number = 100;
+  let pageSize = parseInt(req.query.pageSize, 10);
+  if (isNaN(pageSize) || pageSize < 0 || pageSize > 100) {
+    pageSize = 100;
   }
 
-  query = query.limit(number);
-  res.set('Pagination-Number', number);
+  query = query.skip((page - 1) * pageSize).limit(pageSize);
+
+  const maxPage = Math.ceil(total / pageSize);
+
+  const links = {};
+  const url = config.baseUrl + resourceHref;
+
+  if (page > 1) {
+    links.first = { rel: 'first', url: `${url}?page=1&pageSize=${pageSize}` };
+    links.prev = { rel: 'prev', url: `${url}?page=${page - 1}&pageSize=${pageSize}` };
+  }
+
+  if (page < maxPage) {
+    links.next = { rel: 'next', url: `${url}?page=${page + 1}&pageSize=${pageSize}` };
+    links.last = { rel: 'last', url: `${url}?page=${maxPage}&pageSize=${pageSize}` };
+  }
+
+  if (Object.keys(links).length >= 1) {
+    res.set('Link', formatLinkHeader(links));
+  }
 
   return query;
 };

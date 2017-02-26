@@ -30,10 +30,9 @@ router.get('/', function(req, res, next) {
       return next(err);
     }
 
-    res.set('Pagination-Total', total);
-
     let query = queryMovies(req);
-    query = utils.paginate(query, req, res);
+
+    query = utils.paginate('/api/movies', query, total, req, res);
 
     if (utils.responseShouldInclude(req, 'director')) {
       query = query.populate('director');

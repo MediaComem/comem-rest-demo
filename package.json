@@ -13,6 +13,7 @@
     "body-parser": "~1.16.0",
     "debug": "~2.6.0",
     "express": "~4.14.1",
+    "format-link-header": "^2.0.0",
     "jade": "~1.11.0",
     "mongoose": "^4.8.4",
     "mongoose-integer": "^0.1.1",

@@ -66,10 +66,9 @@ router.get('/', function(req, res, next) {
       return next(err);
     }
 
-    res.set('Pagination-Total', total);
-
     let query = queryPeople(req);
-    query = utils.paginate(query, req, res);
+
+    query = utils.paginate('/api/people', query, total, req, res);
 
     query.sort({ name: 1 }).exec(function(err, people) {
       if (err) {
