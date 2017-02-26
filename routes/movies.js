@@ -119,12 +119,12 @@ function queryMovies(req) {
     query = query.where('rating').equals(req.query.rating);
   }
 
-  if (!isNaN(req.query.ratingAtLeast)) {
-    query = query.where('rating').gte(req.query.ratingAtLeast);
+  if (!isNaN(req.query.ratedAtLeast)) {
+    query = query.where('rating').gte(req.query.ratedAtLeast);
   }
 
-  if (!isNaN(req.query.ratingAtMost)) {
-    query = query.where('rating').lte(req.query.ratingAtMost);
+  if (!isNaN(req.query.ratedAtMost)) {
+    query = query.where('rating').lte(req.query.ratedAtMost);
   }
 
   return query;
