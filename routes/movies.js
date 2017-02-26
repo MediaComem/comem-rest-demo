@@ -130,20 +130,26 @@ function queryMovies(req) {
 }
 
 function loadMovieFromParams(req, res, next) {
-  if (!ObjectId.isValid(req.params.id)) {
-    return res.status(404).send('No movie found with ID ' + req.params.id);
+
+  const movieId = req.params.id;
+  if (!ObjectId.isValid(movieId)) {
+    return movieNotFound(res, movieId);
   }
 
-  Movie.findOne({ _id: ObjectId(req.params.id) }).exec(function(err, movie) {
+  Movie.findById(movieId).exec(function(err, movie) {
     if (err) {
       return next(err);
     } else if (!movie) {
-      return res.status(404).send('No movie found with ID ' + req.params.id);
+      return movieNotFound(res, movieId);
     }
 
     req.movie = movie;
     next();
   });
+}
+
+function movieNotFound(res, movieId) {
+  return res.status(404).type('text').send(`No movie found with ID ${movieId}`);
 }
 
 module.exports = router;

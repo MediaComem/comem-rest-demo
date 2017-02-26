@@ -154,19 +154,23 @@ function loadPersonFromParams(req, res, next) {
 
   const personId = req.params.id;
   if (!ObjectId.isValid(personId)) {
-    return res.status(404).send('No person found with ID ' + personId);
+    return personNotFound(res, personId);
   }
 
-  Person.findOne({ _id: ObjectId(personId) }).exec(function(err, person) {
+  Person.findById(req.params.id).exec(function(err, person) {
     if (err) {
       return next(err);
     } else if (!person) {
-      return res.status(404).send('No person found with ID ' + personId);
+      return personNotFound(res, personId);
     }
 
     req.person = person;
     next();
   });
+}
+
+function personNotFound(res, personId) {
+  return res.status(404).type('text').send(`No person found with ID ${personId}`);
 }
 
 function countMoviesDirectedBy(people, callback) {
