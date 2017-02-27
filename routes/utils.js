@@ -60,3 +60,25 @@ exports.responseShouldInclude = function(req, property) {
 
   return propertiesToInclude.indexOf(property) >= 0;
 };
+
+exports.authenticate = function(req, res, next) {
+  if (!process.env.AUTH_TOKEN) {
+    return res.sendStatus(401);
+  }
+
+  const authorizationHeader = req.get('Authorization');
+  if (!authorizationHeader) {
+    return res.sendStatus(401);
+  }
+
+  const match = authorizationHeader.match(/^Bearer +(.+)$/);
+  if (!match) {
+    return res.sendStatus(401);
+  }
+
+  if (match[1] != process.env.AUTH_TOKEN) {
+    return res.sendStatus(401);
+  }
+
+  next();
+};
