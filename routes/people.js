@@ -71,7 +71,7 @@ const router = express.Router();
  *       }
  *     }
  */
-router.post('/', function(req, res, next) {
+router.post('/', utils.requireJson, function(req, res, next) {
   new Person(req.body).save(function(err, savedPerson) {
     if (err) {
       return next(err);
@@ -259,7 +259,7 @@ router.get('/:id', loadPersonFromParams, function(req, res, next) {
  *       }
  *     }
  */
-router.patch('/:id', loadPersonFromParams, function(req, res, next) {
+router.patch('/:id', utils.requireJson, loadPersonFromParams, function(req, res, next) {
   if (req.body.name !== undefined) {
     req.person.name = req.body.name;
   }
@@ -357,7 +357,7 @@ router.patch('/:id', loadPersonFromParams, function(req, res, next) {
  *       }
  *     }
  */
-router.put('/:id', loadPersonFromParams, function(req, res, next) {
+router.put('/:id', utils.requireJson, loadPersonFromParams, function(req, res, next) {
   req.person.name = req.body.name;
   req.person.gender = req.body.gender;
   req.person.birthDate = req.body.birthDate;

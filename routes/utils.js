@@ -1,6 +1,16 @@
 const config = require('../config');
 const formatLinkHeader = require('format-link-header');
 
+exports.requireJson = function(req, res, next) {
+  if (req.is('application/json')) {
+    return next();
+  }
+
+  const error = new Error('This resource only has an application/json representation');
+  error.status = 415; // 415 Unsupported Media Type
+  next(error);
+};
+
 exports.paginate = function(resourceHref, query, total, req, res) {
 
   let page = parseInt(req.query.page, 10);

@@ -8,7 +8,7 @@ const utils = require('./utils');
 
 const router = express.Router();
 
-router.post('/', function(req, res, next) {
+router.post('/', utils.requireJson, function(req, res, next) {
   new Movie(req.body).save(function(err, savedMovie) {
     if (err) {
       if (err.name == 'ValidationError') {
@@ -52,7 +52,7 @@ router.get('/:id', loadMovieFromParams, function(req, res, next) {
   res.send(req.movie);
 });
 
-router.patch('/:id', loadMovieFromParams, function(req, res, next) {
+router.patch('/:id', utils.requireJson, loadMovieFromParams, function(req, res, next) {
 
   if (req.body.title !== undefined) {
     req.movie.title = req.body.title;
@@ -74,7 +74,7 @@ router.patch('/:id', loadMovieFromParams, function(req, res, next) {
   });
 });
 
-router.put('/:id', loadMovieFromParams, function(req, res, next) {
+router.put('/:id', utils.requireJson, loadMovieFromParams, function(req, res, next) {
 
   req.movie.title = req.body.title;
   req.movie.rating = req.body.rating;
