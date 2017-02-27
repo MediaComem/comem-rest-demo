@@ -27,8 +27,7 @@ const router = express.Router();
  *     {
  *       "title": "Die Hard",
  *       "rating": 7.4,
- *       "directorHref": "/api/people/58b2926f5e1def0123e97bc0",
- *       "createdAt": "1988-07-12T00:00:00.000Z"
+ *       "directorHref": "/api/people/58b2926f5e1def0123e97bc0"
  *     }
  *
  * @apiSuccessExample 201 Created
