@@ -1,4 +1,5 @@
 const config = require('../config');
+const debug = require('debug')('demo:people');
 const express = require('express');
 const mongoose = require('mongoose');
 const ObjectId = mongoose.Types.ObjectId;
@@ -49,7 +50,12 @@ router.post('/', utils.requireJson, function(req, res, next) {
       return next(err);
     }
 
-    res.status(201).set('Location', `${config.baseUrl}/api/people/${savedPerson._id}`).send(savedPerson);
+    debug(`Created person "${savedPerson.name}"`);
+
+    res
+      .status(201)
+      .set('Location', `${config.baseUrl}/api/people/${savedPerson._id}`)
+      .send(savedPerson);
   });
 });
 
@@ -61,16 +67,15 @@ router.post('/', utils.requireJson, function(req, res, next) {
  * @apiDescription Retrieves a paginated list of people.
  *
  * @apiUse PersonInResponseBody
+ * @apiUse Pagination
  *
  * @apiExample Example
- *     GET /api/people?page=1&pageSize=50 HTTP/1.1
- *
- * @apiParam (URL query parameters) {Number{1..}} [page] The page to retrieve (defaults to 1)
- * @apiParam (URL query parameters) {Number{1..100}} [pageSize] The number of people to retrieve in one page (defaults to 100)
+ *     GET /api/people?page=2&pageSize=50 HTTP/1.1
  *
  * @apiSuccessExample 200 OK
  *     HTTP/1.1 200 OK
  *     Content-Type: application/json
+ *     Link: &lt;https://evening-meadow-25867.herokuapp.com/api/people?page=1&pageSize=50&gt;; rel="first prev"
  *
  *     [
  *       {
@@ -111,14 +116,14 @@ router.get('/', function(req, res, next) {
           return next(err);
         }
 
-        people = people.map(person => person.toJSON());
+        const peopleJson = people.map(person => person.toJSON());
 
         results.forEach(function(result) {
-          const person = people.find(person => person.id == result._id.toString());
+          const person = peopleJson.find(person => person.id == result._id.toString());
           person.directedMoviesCount = result.moviesCount;
         });
 
-        res.send(people);
+        res.send(peopleJson);
       });
     });
   });
@@ -138,8 +143,6 @@ router.get('/', function(req, res, next) {
  * @apiExample Example
  *     GET /api/people/58b2926f5e1def0123e97bc0 HTTP/1.1
  *
- * @apiParam (URL path parameters) {String} id The unique identifier of the person to retrieve
- *
  * @apiSuccessExample 200 OK
  *     HTTP/1.1 200 OK
  *     Content-Type: application/json
@@ -152,10 +155,15 @@ router.get('/', function(req, res, next) {
  *       "createdAt": "2017-01-01T14:31:87.000Z"
  *     }
  */
-router.get('/:id', loadPersonFromParams, function(req, res, next) {
-  res.send(req.person);
-});
+router.get('/:id', loadPersonFromParamsMiddleware, function(req, res, next) {
+  countMoviesDirectedBy([ req.person ], function(err, results) {
+    if (err) {
+      return next(err);
+    }
 
+    res.send(req.person);
+  })
+});
 
 /**
  * @api {patch} /api/people/:id Partially update a person
@@ -170,8 +178,6 @@ router.get('/:id', loadPersonFromParams, function(req, res, next) {
  * @apiUse PersonInResponseBody
  * @apiUse PersonNotFoundError
  * @apiUse PersonValidationError
- *
- * @apiParam (URL path parameters) {String} id The unique identifier of the person to retrieve
  *
  * @apiExample Example
  *     PATCH /api/people/58b2926f5e1def0123e97bc0 HTTP/1.1
@@ -194,7 +200,9 @@ router.get('/:id', loadPersonFromParams, function(req, res, next) {
  *       "createdAt": "2017-01-01T14:31:87.000Z"
  *     }
  */
-router.patch('/:id', utils.requireJson, loadPersonFromParams, function(req, res, next) {
+router.patch('/:id', utils.requireJson, loadPersonFromParamsMiddleware, function(req, res, next) {
+
+  // Update properties present in the request body
   if (req.body.name !== undefined) {
     req.person.name = req.body.name;
   }
@@ -204,14 +212,13 @@ router.patch('/:id', utils.requireJson, loadPersonFromParams, function(req, res,
   if (req.body.birthDate !== undefined) {
     req.person.birthDate = req.body.birthDate;
   }
+
   req.person.save(function(err, savedPerson) {
     if (err) {
-      if (err.name == 'ValidationError') {
-        err.status = 422;
-      }
       return next(err);
     }
 
+    debug(`Updated person "${savedPerson.name}"`);
     res.send(savedPerson);
   });
 });
@@ -251,18 +258,19 @@ router.patch('/:id', utils.requireJson, loadPersonFromParams, function(req, res,
  *       "createdAt": "2017-01-01T14:31:87.000Z"
  *     }
  */
-router.put('/:id', utils.requireJson, loadPersonFromParams, function(req, res, next) {
+router.put('/:id', utils.requireJson, loadPersonFromParamsMiddleware, function(req, res, next) {
+
+  // Update all properties (regardless of whether they are in the request body or not)
   req.person.name = req.body.name;
   req.person.gender = req.body.gender;
   req.person.birthDate = req.body.birthDate;
+
   req.person.save(function(err, savedPerson) {
     if (err) {
-      if (err.name == 'ValidationError') {
-        err.status = 422;
-      }
       return next(err);
     }
 
+    debug(`Updated person "${savedPerson.name}"`);
     res.send(savedPerson);
   });
 });
@@ -283,17 +291,30 @@ router.put('/:id', utils.requireJson, loadPersonFromParams, function(req, res, n
  * @apiSuccessExample 204 No Content
  *     HTTP/1.1 204 No Content
  */
-router.delete('/:id', loadPersonFromParams, function(req, res, next) {
-  // TODO: 409 conflict if linked with movies
-  req.person.remove(function(err) {
+router.delete('/:id', loadPersonFromParamsMiddleware, function(req, res, next) {
+  // Check if a movie exists before deleting
+  Movie.findOne({ director: req.person._id }).exec(function(err, movie) {
     if (err) {
       return next(err);
+    } else if (movie) {
+      // Do not delete if any movie is directed by this person
+      return res.status(409).type('text').send(`Cannot delete person ${req.person.name} because movies are directed by them`)
     }
 
-    res.sendStatus(204);
+    req.person.remove(function(err) {
+      if (err) {
+        return next(err);
+      }
+
+      debug(`Deleted person "${req.person.name}"`);
+      res.sendStatus(204);
+    });
   });
 });
 
+/**
+ * Returns a Mongoose query that will retrieve people filtered with the URL query parameters.
+ */
 function queryPeople(req) {
 
   let query = Person.find();
@@ -305,7 +326,11 @@ function queryPeople(req) {
   return query;
 }
 
-function loadPersonFromParams(req, res, next) {
+/**
+ * Middleware that loads the person corresponding to the ID in the URL path.
+ * Responds with 404 Not Found if the ID is not valid or the person doesn't exist.
+ */
+function loadPersonFromParamsMiddleware(req, res, next) {
 
   const personId = req.params.id;
   if (!ObjectId.isValid(personId)) {
@@ -324,10 +349,28 @@ function loadPersonFromParams(req, res, next) {
   });
 }
 
+/**
+ * Responds with 404 Not Found and a message indicating that the person with the specified ID was not found.
+ */
 function personNotFound(res, personId) {
   return res.status(404).type('text').send(`No person found with ID ${personId}`);
 }
 
+/**
+ * Given an array of people, performs an aggregation to count the movies directed by those people.
+ * The callback will receive the result in the following format:
+ *
+ *     [
+ *       {
+ *         _id: "PERSON-ID-1",
+ *         moviesCount: 12
+ *       },
+ *       {
+ *         _id: "PERSON-ID-2",
+ *         moviesCount: 38
+ *       }
+ *     ]
+ */
 function countMoviesDirectedBy(people, callback) {
 
   // Do not perform the aggregation query if there are no people to retrieve movies for
@@ -338,14 +381,14 @@ function countMoviesDirectedBy(people, callback) {
   // Aggregate movies count by director (i.e. person ID)
   Movie.aggregate([
     {
-      $match: {
+      $match: { // Select only movies directed by the people we are interested in
         director: {
           $in: people.map(person => person._id)
         }
       }
     },
     {
-      $group: {
+      $group: { // Count movies by director
         _id: '$director',
         moviesCount: {
           $sum: 1
@@ -362,7 +405,7 @@ function countMoviesDirectedBy(people, callback) {
 
 /**
  * @apiDefine PersonInRequestBody
- * @apiParam (Request body) {String{3..30}} name The name of the person
+ * @apiParam (Request body) {String{3..30}} name The name of the person (must be unique)
  * @apiParam (Request body) {String="male,female"} gender The gender of the person
  * @apiParam (Request body) {String} [birthDate] The birth date of the person ([ISO-8601](https://en.wikipedia.org/wiki/ISO_8601) format)
  */
@@ -373,13 +416,13 @@ function countMoviesDirectedBy(people, callback) {
  * @apiSuccess (Response body) {String} name The name of the person
  * @apiSuccess (Response body) {String} gender The gender of the person
  * @apiSuccess (Response body) {String} birthDate The birth date of the person (if any)
- * @apiSuccess (Response body) {String} createdAt The creation date of the person
+ * @apiSuccess (Response body) {String} createdAt The date at which the person was registered
  */
 
 /**
  * @apiDefine PersonNotFoundError
  *
- * @apiError {Object} 404 No person was found corresponding to the ID in the URL path
+ * @apiError {Object} 404/NotFound No person was found corresponding to the ID in the URL path
  *
  * @apiErrorExample {json} 404 Not Found
  *     HTTP/1.1 404 Not Found
@@ -391,7 +434,7 @@ function countMoviesDirectedBy(people, callback) {
 /**
  * @apiDefine PersonValidationError
  *
- * @apiError {Object} 422 Some of the person's properties are invalid
+ * @apiError {Object} 422/UnprocessableEntity Some of the person's properties are invalid
  *
  * @apiErrorExample {json} 422 Unprocessable Entity
  *     HTTP/1.1 422 Unprocessable Entity

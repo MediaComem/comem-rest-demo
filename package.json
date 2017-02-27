@@ -16,7 +16,6 @@
     "format-link-header": "^2.0.0",
     "jade": "~1.11.0",
     "mongoose": "^4.8.4",
-    "mongoose-integer": "^0.1.1",
     "morgan": "~1.7.0",
     "serve-favicon": "~2.3.2"
   },

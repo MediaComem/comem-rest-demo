@@ -13,6 +13,8 @@ const personSchema = new Schema({
     maxlength: 30,
     unique: true,
     validate: {
+      // Manually validate uniqueness to send a "pretty" validation error
+      // rather than a MongoDB duplicate key error
       validator: validatePersonNameUniqueness,
       message: 'Person {VALUE} already exists'
     }
@@ -31,20 +33,30 @@ const personSchema = new Schema({
   }
 });
 
-personSchema.set('toJSON', { transform: transformJsonPerson, virtuals: true });
+// Customize the behavior of person.toJSON() (called when using res.send)
+personSchema.set('toJSON', {
+  transform: transformJsonPerson, // Modify the serialized JSON with a custom function
+  virtuals: true // Include virtual properties when serializing documents to JSON
+});
 
+/**
+ * Given a name, calls the callback function with true if no person exists with that name
+ * (or the only person that exists is the same as the person being validated).
+ */
 function validatePersonNameUniqueness(value, callback) {
+  const person = this;
   this.constructor.findOne().where('name').equals(value).exec(function(err, existingPerson) {
-    callback(!err && !existingPerson);
+    callback(!err && (!existingPerson || existingPerson._id.equals(person._id)));
   });
 }
 
+/**
+ * Removes extra MongoDB properties from serialized people.
+ */
 function transformJsonPerson(doc, json, options) {
 
-  // Remove MongoDB _id (there's a default virtual "id" field)
+  // Remove MongoDB _id & __v (there's a default virtual "id" property)
   delete json._id;
-
-  // Remove MongoDB __v
   delete json.__v;
 
   return json;
