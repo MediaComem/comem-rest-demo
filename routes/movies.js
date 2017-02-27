@@ -66,10 +66,16 @@ router.post('/', utils.requireJson, function(req, res, next) {
  * @apiDescription Retrieves a paginated list of movies.
  *
  * @apiUse MovieInResponseBody
+ * @apiUse MovieIncludes
  * @apiUse Pagination
  *
+ * @apiParam (URL query parameters) {String} [director] Select only movies directed by the person with the specified ID (this parameter can be given multiple times)
+ * @apiParam (URL query parameters) {Number} [rating] Select only movies with the specified rating (exact match)
+ * @apiParam (URL query parameters) {Number} [ratedAtLeast] Select only movies with a rating greater than or equal to the specified rating
+ * @apiParam (URL query parameters) {Number} [ratedAtMost] Select only movies with a rating lesser than or equal to the specified rating
+ *
  * @apiExample Example
- *     GET /api/movies?page=2&pageSize=50 HTTP/1.1
+ *     GET /api/movies?director=58b2926f5e1def0123e97bc0&page=2&pageSize=50 HTTP/1.1
  *
  * @apiSuccessExample 200 OK
  *     HTTP/1.1 200 OK
@@ -133,6 +139,7 @@ router.get('/', function(req, res, next) {
  *
  * @apiUse MovieIdInUrlPath
  * @apiUse MovieInResponseBody
+ * @apiUse MovieIncludes
  * @apiUse MovieNotFoundError
  *
  * @apiExample Example
@@ -326,7 +333,14 @@ function loadMovieFromParamsMiddleware(req, res, next) {
     return movieNotFound(res, movieId);
   }
 
-  Movie.findById(movieId, function(err, movie) {
+  let query = Movie.findById(movieId)
+
+  // Populate the director if indicated in the "include" URL query parameter
+  if (utils.responseShouldInclude(req, 'director')) {
+    query = query.populate('director');
+  }
+
+  query.exec(function(err, movie) {
     if (err) {
       return next(err);
     } else if (!movie) {
@@ -364,6 +378,12 @@ function movieNotFound(res, movieId) {
  * @apiSuccess (Response body) {Number} rating How the movie has been rated on a scale of 0 to 10
  * @apiSuccess (Response body) {String} directorHref A hyperlink reference to the person who directed the movie
  * @apiSuccess (Response body) {String} createdAt The date at which the movie was registered
+ */
+
+/**
+ * @apiDefine MovieIncludes
+ * @apiParam (URL query parameters) {String} [include] Embed linked resources in the response body:
+ * * `"director"` for the movie's director
  */
 
 /**

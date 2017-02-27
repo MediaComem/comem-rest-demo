@@ -69,8 +69,10 @@ router.post('/', utils.requireJson, function(req, res, next) {
  * @apiUse PersonInResponseBody
  * @apiUse Pagination
  *
+ * @apiParam (URL query parameters) {String} [gender] Select only people of the specified gender
+ *
  * @apiExample Example
- *     GET /api/people?page=2&pageSize=50 HTTP/1.1
+ *     GET /api/people?gender=male&page=2&pageSize=50 HTTP/1.1
  *
  * @apiSuccessExample 200 OK
  *     HTTP/1.1 200 OK
