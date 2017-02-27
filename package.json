@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "apidoc": "apidoc -i routes -o docs",
-    "apidoc:watch": "onchange routes/**/*.js -- npm run apidoc",
+    "apidoc:watch": "onchange APIDOC.md routes/**/*.js -- npm run apidoc",
     "dev": "concurrently \"npm run nodemon\" \"npm run apidoc:watch\"",
     "nodemon": "DEBUG=demo:* AUTH_TOKEN=secret nodemon",
     "start": "node ./bin/www"
