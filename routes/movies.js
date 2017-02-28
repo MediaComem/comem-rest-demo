@@ -63,7 +63,7 @@ router.post('/', utils.requireJson, function(req, res, next) {
  * @apiName RetrieveMovies
  * @apiGroup Movie
  * @apiVersion 1.0.0
- * @apiDescription Retrieves a paginated list of movies.
+ * @apiDescription Retrieves a paginated list of movies ordered by title (in alphabetical order).
  *
  * @apiUse MovieInResponseBody
  * @apiUse MovieIncludes

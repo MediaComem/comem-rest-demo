@@ -64,7 +64,7 @@ router.post('/', utils.requireJson, function(req, res, next) {
  * @apiName RetrievePeople
  * @apiGroup Person
  * @apiVersion 1.0.0
- * @apiDescription Retrieves a paginated list of people.
+ * @apiDescription Retrieves a paginated list of people sorted by name (in alphabetical order).
  *
  * @apiUse PersonInResponseBody
  * @apiUse Pagination
