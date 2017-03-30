@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "apidoc": "apidoc -i routes -o docs",
-    "apidoc:watch": "onchange routes/**/*.js -- npm run apidoc",
+    "apidoc:watch": "onchange APIDOC.md routes/**/*.js -- npm run apidoc",
     "dev": "concurrently \"npm run nodemon\" \"npm run apidoc:watch\"",
     "nodemon": "DEBUG=demo:* AUTH_TOKEN=secret nodemon",
     "start": "node ./bin/www"
@@ -16,7 +16,6 @@
     "format-link-header": "^2.0.0",
     "jade": "~1.11.0",
     "mongoose": "^4.8.4",
-    "mongoose-integer": "^0.1.1",
     "morgan": "~1.7.0",
     "serve-favicon": "~2.3.2"
   },

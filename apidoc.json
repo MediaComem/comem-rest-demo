@@ -3,5 +3,8 @@
   "version": "1.0.0",
   "description": "A demonstration REST API developed with Express",
   "title": "Express REST Demo",
-  "url" : "https://evening-meadow-25867.herokuapp.com"
+  "url" : "https://evening-meadow-25867.herokuapp.com",
+  "header": {
+    "filename": "APIDOC.md"
+  }
 }
