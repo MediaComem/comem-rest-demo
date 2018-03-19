@@ -118,14 +118,7 @@ router.get('/', function(req, res, next) {
           return next(err);
         }
 
-        const peopleJson = people.map(person => person.toJSON());
-
-        results.forEach(function(result) {
-          const person = peopleJson.find(person => person.id == result._id.toString());
-          person.directedMoviesCount = result.moviesCount;
-        });
-
-        res.send(peopleJson);
+        res.send(serializePeople(people, results));
       });
     });
   });
@@ -163,7 +156,7 @@ router.get('/:id', loadPersonFromParamsMiddleware, function(req, res, next) {
       return next(err);
     }
 
-    res.send(req.person);
+    res.send(serializePeople([ req.person ], results)[0]);
   })
 });
 
@@ -398,6 +391,22 @@ function countMoviesDirectedBy(people, callback) {
       }
     }
   ], callback);
+}
+
+/**
+ * Serializes an array of people to JSON and adds to each person object the
+ * aggregated number of movies they directed (returned by `countMoviesDirectedBy`).
+ */
+function serializePeople(people, movieCountsAggregation = []) {
+
+  const peopleJson = people.map(person => person.toJSON());
+
+  movieCountsAggregation.forEach(function(aggregationResult) {
+    const person = peopleJson.find(person => person.id == aggregationResult._id.toString());
+    person.directedMoviesCount = aggregationResult.moviesCount;
+  });
+
+  return peopleJson;
 }
 
 /**
