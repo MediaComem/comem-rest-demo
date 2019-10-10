@@ -6,7 +6,7 @@ A demonstration RESTful API implemented with [Express][express].
 
 ## Requirements
 
-* [Node.js][node] 6.x
+* [Node.js][node] 12.x
 * [MongoDB][mongo] 3.x
 
 
@@ -16,7 +16,7 @@ A demonstration RESTful API implemented with [Express][express].
 ```bash
 git clone git@github.com:MediaComem/comem-webdev-express-rest-demo.git
 cd comem-webdev-express-rest-demo
-npm install
+npm ci
 DEBUG=demo:* npm start
 ```
 
