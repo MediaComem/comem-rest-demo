@@ -5,7 +5,6 @@ const app = require('../app');
 const config = require('../config');
 const debug = require('debug')('demo:server');
 const http = require('http');
-const mongoose = require('mongoose');
 
 // Get port from environment and store in Express
 const port = normalizePort(config.port);
