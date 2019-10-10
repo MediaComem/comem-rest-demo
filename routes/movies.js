@@ -111,8 +111,14 @@ router.get('/', function(req, res, next) {
     // Prepare the initial database query from the URL query parameters
     let query = queryMovies(req);
 
-    // Paginate
-    query = utils.paginate('/api/movies', query, total, req, res);
+    // Parse pagination parameters from URL query parameters
+    const { page, pageSize } = utils.getPaginationParameters(req);
+
+    // Apply the pagination to the database query
+    query = query.skip((page - 1) * pageSize).limit(pageSize);
+
+    // Add the Link header to the response
+    utils.addLinkHeader('/api/movies', page, pageSize, total, res);
 
     // Populate the director if indicated in the "include" URL query parameter
     if (utils.responseShouldInclude(req, 'director')) {

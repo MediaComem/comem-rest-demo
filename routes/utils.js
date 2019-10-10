@@ -72,30 +72,6 @@ exports.addLinkHeader = function(resourceHref, page, pageSize, total, res) {
 }
 
 /**
- * Paginates a database query and adds a Link header to the response (if applicable).
- *
- * @param {String} resourceHref - The hyperlink reference of the collection (e.g. "/api/people")
- * @param {MongooseQuery} query - The database query to paginate
- * @param {Number} total - The total number of elements in the collection
- * @param {ExpressRequest} req - The Express request object
- * @param {ExpressResponse} res - The Express response object
- * @returns The paginated query
- */
-exports.paginate = function(resourceHref, query, total, req, res) {
-
-  // Parse pagination parameters from URL query parameters.
-  const { page, pageSize } = exports.getPaginationParameters(req);
-
-  // Apply the pagination to the database query
-  query = query.skip((page - 1) * pageSize).limit(pageSize);
-
-  // Add the Link header to the response.
-  exports.addLinkHeader(resourceHref, page, pageSize, total, res);
-
-  return query;
-};
-
-/**
  * Returns true if the specified property is among the "include" URL query parameters sent by the client
  */
 exports.responseShouldInclude = function(req, property) {
