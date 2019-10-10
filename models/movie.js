@@ -35,7 +35,8 @@ const movieSchema = new Schema({
     validate: {
       // Validate that the director is a valid ObjectId
       // and references an existing person
-      validator: validateDirector
+      validator: validateDirector,
+      //message: function(props) { return props.reason.message; }
     }
   }
 });
@@ -62,32 +63,33 @@ movieSchema.set('toJSON', {
  * (That way, the client gets an error on "directorHref", which is the
  * property they sent, rather than "director", which they don't know.)
  */
-function validateDirector(value, callback) {
-  if (!value && !this._directorHref) {
-    this.invalidate('directorHref', 'Path `directorHref` is required', value, 'required');
-    return callback();
-  } else if (!ObjectId.isValid(value)) {
-    this.invalidate('directorHref', 'Path `directorHref` is not a valid Person reference', this._directorHref, 'resourceNotFound');
-    return callback();
-  }
+function validateDirector(value) {
+  return new Promise((resolve, reject) => {
 
-  mongoose.model('Person').findOne({ _id: ObjectId(value) }).exec(function(err, person) {
-    if (err || !person) {
-      this.invalidate('directorHref', 'Path `directorHref` does not reference a Person that exists', this._directorHref, 'resourceNotFound');
+    if (!value) {
+      //reject(new Error('directorHref', 'Path `directorHref` is required', value, 'required'));
+    } else if (!ObjectId.isValid(value)) {
+      reject(new Error('directorHref', 'Path `directorHref` is not a valid Person reference', value, 'resourceNotFound'))
     }
 
-    callback();
-  });
+    mongoose.model('Person').findOne({ _id: ObjectId(value) }).exec()
+      .then(function (err, person) {
+        if (err || !person) {
+          reject(new Error('directorHref', 'Path `directorHref` does not reference a Person that exists', value, 'resourceNotFound'));
+        }
+      }).catch(e => { reject(e) });
+  })
 }
 
 /**
  * Given a title, calls the callback function with true if no movie exists with that title
  * (or the only movie that exists is the same as the movie being validated).
  */
-function validateMovieTitleUniqueness(value, callback) {
-  const movie = this;
-  this.constructor.findOne().where('title').equals(value).exec(function(err, existingMovie) {
-    callback(!err && (!existingMovie || existingMovie._id.equals(movie._id)));
+function validateMovieTitleUniqueness(value) {
+  let MovieModel = mongoose.model('Movie', movieSchema);
+
+  return MovieModel.findOne().where('title').equals(value).exec().then(function (existingMovie) {
+    return (!existingMovie || existingMovie._id.equals(value._id))
   });
 }
 
