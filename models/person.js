@@ -46,7 +46,6 @@ personSchema.set('toJSON', {
  * (or the only person that exists is the same as the person being validated).
  */
 function validatePersonNameUniqueness(value) {
-  console.log(this)
   return this.constructor.findOne().where('name').equals(value).exec().then((existingPerson) => {
     return !existingPerson || existingPerson._id.equals(this._id);
   });
