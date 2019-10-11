@@ -15,16 +15,12 @@ exports.requireJson = function(req, res, next) {
 };
 
 /**
- * Paginates a database query and adds a Link header to the response (if applicable).
+ * Parses the pagination parameters (i.e. page & page size) from the request.
  *
- * @param {String} resourceHref - The hyperlink reference of the collection (e.g. "/api/people")
- * @param {MongooseQuery} query - The database query to paginate
- * @param {Number} total - The total number of elements in the collection
  * @param {ExpressRequest} req - The Express request object
- * @param {ExpressResponse} res - The Express response object
- * @returns The paginated query
+ * @returns An object with "page" and "pageSize" properties
  */
-exports.paginate = function(resourceHref, query, total, req, res) {
+exports.getPaginationParameters = function(req) {
 
   // Parse the "page" URL query parameter indicating the index of the first element that should be in the response
   let page = parseInt(req.query.page, 10);
@@ -38,8 +34,19 @@ exports.paginate = function(resourceHref, query, total, req, res) {
     pageSize = 100;
   }
 
-  // Apply the pagination to the database query
-  query = query.skip((page - 1) * pageSize).limit(pageSize);
+  return { page, pageSize };
+};
+
+/**
+ * Adds a Link header to the response (if applicable).
+ *
+ * @param {String} resourceHref - The hyperlink reference of the collection (e.g. "/api/people")
+ * @param {Number} page - The page being listed
+ * @param {Number} pageSize - The page size
+ * @param {Number} total - The total number of elements
+ * @param {ExpressResponse} res - The Exprss response object
+ */
+exports.addLinkHeader = function(resourceHref, page, pageSize, total, res) {
 
   const links = {};
   const url = config.baseUrl + resourceHref;
@@ -62,9 +69,7 @@ exports.paginate = function(resourceHref, query, total, req, res) {
   if (Object.keys(links).length >= 1) {
     res.set('Link', formatLinkHeader(links));
   }
-
-  return query;
-};
+}
 
 /**
  * Returns true if the specified property is among the "include" URL query parameters sent by the client

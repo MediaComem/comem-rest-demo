@@ -41,7 +41,8 @@ const router = express.Router();
  *       "name": "John Doe",
  *       "gender": "male",
  *       "birthDate": "2001-02-03T08:30:00.000Z",
- *       "createdAt": "2017-01-01T14:31:87.000Z"
+ *       "createdAt": "2017-01-01T14:31:87.000Z",
+ *       "directedMovies": 0
  *     }
  */
 router.post('/', utils.requireJson, function(req, res, next) {
@@ -85,14 +86,16 @@ router.post('/', utils.requireJson, function(req, res, next) {
  *         "name": "John Doe",
  *         "gender": "male",
  *         "birthDate": "2001-02-03T08:30:00.000Z",
- *         "createdAt": "2017-01-01T14:31:87.000Z"
+ *         "createdAt": "2017-01-01T14:31:87.000Z",
+ *         "directedMovies": 2
  *       },
  *       {
  *         "id": "58b2926f5e1def0123e97bc1",
  *         "name": "John Smith",
  *         "gender": "male",
  *         "birthDate": "2001-02-04T07:00:00.000Z",
- *         "createdAt": "2017-01-11T09:12:12.000Z"
+ *         "createdAt": "2017-01-11T09:12:12.000Z",
+ *         "directedMovies": 3
  *       }
  *     ]
  */
@@ -104,22 +107,59 @@ router.get('/', function(req, res, next) {
       return next(err);
     }
 
-    let query = queryPeople(req);
+    // Parse pagination parameters from URL query parameters.
+    const { page, pageSize } = utils.getPaginationParameters(req);
 
-    query = utils.paginate('/api/people', query, total, req, res);
-
-    query.sort('name').exec(function(err, people) {
+    Person.aggregate([
+      {
+        $lookup: {
+          from: 'movies',
+          localField: '_id',
+          foreignField: 'director',
+          as: 'directedMovies'
+        }
+      },
+      {
+        $unwind: '$directedMovies'
+      },
+      {
+        $group: {
+          _id: '$_id',
+          birthDate: { $first: '$birthDate' },
+          createdAt: { $first: '$createdAt' },
+          directedMovies: { $sum: 1 },
+          gender: { $first: '$gender' },
+          name: { $first: '$name' }
+        }
+      },
+      {
+        $sort: {
+          name: 1
+        }
+      },
+      {
+        $skip: (page - 1) * pageSize
+      },
+      {
+        $limit: pageSize
+      }
+    ], (err, people) => {
       if (err) {
         return next(err);
       }
 
-      countMoviesDirectedBy(people, function(err, results) {
-        if (err) {
-          return next(err);
-        }
+      utils.addLinkHeader('/api/people', page, pageSize, total, res);
 
-        res.send(serializePeople(people, results));
-      });
+      res.send(people.map(person => {
+
+        // Transform the aggregated object into a Mongoose model.
+        const serialized = new Person(person).toJSON();
+
+        // Add the aggregated property.
+        serialized.directedMovies = person.directedMovies;
+
+        return serialized;
+      }));
     });
   });
 });
@@ -147,17 +187,21 @@ router.get('/', function(req, res, next) {
  *       "name": "John Doe",
  *       "gender": "male",
  *       "birthDate": "2001-02-03T08:30:00.000Z",
- *       "createdAt": "2017-01-01T14:31:87.000Z"
+ *       "createdAt": "2017-01-01T14:31:87.000Z",
+ *       "directedMovies": 3
  *     }
  */
 router.get('/:id', loadPersonFromParamsMiddleware, function(req, res, next) {
-  countMoviesDirectedBy([ req.person ], function(err, results) {
+  countMoviesDirectedBy(req.person, function(err, directedMovies) {
     if (err) {
       return next(err);
     }
 
-    res.send(serializePeople([ req.person ], results)[0]);
-  })
+    res.send({
+      ...req.person.toJSON(),
+      directedMovies
+    });
+  });
 });
 
 /**
@@ -192,7 +236,8 @@ router.get('/:id', loadPersonFromParamsMiddleware, function(req, res, next) {
  *       "name": "Johnny Doe",
  *       "gender": "male",
  *       "birthDate": "1999-01-01T08:30:00.000Z",
- *       "createdAt": "2017-01-01T14:31:87.000Z"
+ *       "createdAt": "2017-01-01T14:31:87.000Z",
+ *       "directedMovies": 3
  *     }
  */
 router.patch('/:id', utils.requireJson, loadPersonFromParamsMiddleware, function(req, res, next) {
@@ -238,7 +283,8 @@ router.patch('/:id', utils.requireJson, loadPersonFromParamsMiddleware, function
  *     {
  *       "name": "Jenny Doe",
  *       "gender": "female",
- *       "birthDate": "1999-01-01T08:30:00.000Z"
+ *       "birthDate": "1999-01-01T08:30:00.000Z",
+ *       "directedMovies": 2
  *     }
  *
  * @apiSuccessExample 200 OK
@@ -250,7 +296,8 @@ router.patch('/:id', utils.requireJson, loadPersonFromParamsMiddleware, function
  *       "name": "Jenny Doe",
  *       "gender": "female",
  *       "birthDate": "1999-01-01T08:30:00.000Z",
- *       "createdAt": "2017-01-01T14:31:87.000Z"
+ *       "createdAt": "2017-01-01T14:31:87.000Z",
+ *       "directedMovies": 2
  *     }
  */
 router.put('/:id', utils.requireJson, loadPersonFromParamsMiddleware, function(req, res, next) {
@@ -352,61 +399,10 @@ function personNotFound(res, personId) {
 }
 
 /**
- * Given an array of people, performs an aggregation to count the movies directed by those people.
- * The callback will receive the result in the following format:
- *
- *     [
- *       {
- *         _id: "PERSON-ID-1",
- *         moviesCount: 12
- *       },
- *       {
- *         _id: "PERSON-ID-2",
- *         moviesCount: 38
- *       }
- *     ]
+ * Given a person, asynchronously returns the number of movies directed by the person.
  */
-function countMoviesDirectedBy(people, callback) {
-
-  // Do not perform the aggregation query if there are no people to retrieve movies for
-  if (people.length <= 0) {
-    return callback(undefined, []);
-  }
-
-  // Aggregate movies count by director (i.e. person ID)
-  Movie.aggregate([
-    {
-      $match: { // Select only movies directed by the people we are interested in
-        director: {
-          $in: people.map(person => person._id)
-        }
-      }
-    },
-    {
-      $group: { // Count movies by director
-        _id: '$director',
-        moviesCount: {
-          $sum: 1
-        }
-      }
-    }
-  ], callback);
-}
-
-/**
- * Serializes an array of people to JSON and adds to each person object the
- * aggregated number of movies they directed (returned by `countMoviesDirectedBy`).
- */
-function serializePeople(people, movieCountsAggregation = []) {
-
-  const peopleJson = people.map(person => person.toJSON());
-
-  movieCountsAggregation.forEach(function(aggregationResult) {
-    const person = peopleJson.find(person => person.id == aggregationResult._id.toString());
-    person.directedMoviesCount = aggregationResult.moviesCount;
-  });
-
-  return peopleJson;
+function countMoviesDirectedBy(person, callback) {
+  Movie.count().where('director', person._id).exec(callback);
 }
 
 /**
@@ -428,6 +424,7 @@ function serializePeople(people, movieCountsAggregation = []) {
  * @apiSuccess (Response body) {String} gender The gender of the person
  * @apiSuccess (Response body) {String} birthDate The birth date of the person (if any)
  * @apiSuccess (Response body) {String} createdAt The date at which the person was registered
+ * @apiSuccess (Response body) {String} directedMovies The number of movies the person directed
  */
 
 /**

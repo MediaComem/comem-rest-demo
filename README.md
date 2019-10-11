@@ -16,7 +16,7 @@ A demonstration RESTful API implemented with [Express][express].
 ```bash
 git clone git@github.com:MediaComem/comem-webdev-express-rest-demo.git
 cd comem-webdev-express-rest-demo
-npm install
+npm ci
 DEBUG=demo:* npm start
 ```
 
