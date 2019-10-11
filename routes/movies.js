@@ -201,10 +201,11 @@ router.patch('/:id', utils.requireJson, loadMovieFromParamsMiddleware, function(
   if (req.body.title !== undefined) {
     req.movie.title = req.body.title;
   }
+
   if (req.body.rating !== undefined) {
     req.movie.rating = req.body.rating;
   }
-
+  
   req.movie.save(function(err, savedMovie) {
     if (err) {
       return next(err);

@@ -12,17 +12,19 @@ const personSchema = new Schema({
     minlength: 3,
     maxlength: 30,
     unique: true,
-    validate: {
+    validate:
       // Manually validate uniqueness to send a "pretty" validation error
       // rather than a MongoDB duplicate key error
-      validator: validatePersonNameUniqueness,
-      message: 'Person {VALUE} already exists'
-    }
+      [{
+        validator: validatePersonNameUniqueness,
+        message:'Person {VALUE} already exists'
+      }],
+
   },
   gender: {
     type: String,
     required: true,
-    enum: [ 'male', 'female' ]
+    enum: ['male', 'female']
   },
   birthDate: {
     type: Date
@@ -43,10 +45,10 @@ personSchema.set('toJSON', {
  * Given a name, calls the callback function with true if no person exists with that name
  * (or the only person that exists is the same as the person being validated).
  */
-function validatePersonNameUniqueness(value, callback) {
-  const person = this;
-  this.constructor.findOne().where('name').equals(value).exec(function(err, existingPerson) {
-    callback(!err && (!existingPerson || existingPerson._id.equals(person._id)));
+function validatePersonNameUniqueness(value) {
+  console.log(this)
+  return this.constructor.findOne().where('name').equals(value).exec().then((existingPerson) => {
+    return !existingPerson || existingPerson._id.equals(this._id);
   });
 }
 

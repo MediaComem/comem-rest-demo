@@ -36,7 +36,7 @@ const movieSchema = new Schema({
       // Validate that the director is a valid ObjectId
       // and references an existing person
       validator: validateDirector,
-      //message: function(props) { return props.reason.message; }
+      message: function(props) { return props.reason.message; }
     }
   }
 });
@@ -67,18 +67,23 @@ function validateDirector(value) {
   return new Promise((resolve, reject) => {
 
     if (!value) {
-      //reject(new Error('directorHref', 'Path `directorHref` is required', value, 'required'));
+      throw new Error(`directorHref Path \`directorHref\` is required`);
     } else if (!ObjectId.isValid(value)) {
-      reject(new Error('directorHref', 'Path `directorHref` is not a valid Person reference', value, 'resourceNotFound'))
+      throw new Error(`directorHref Path \`directorHref\` is not a valid Person reference`);
     }
 
     mongoose.model('Person').findOne({ _id: ObjectId(value) }).exec()
-      .then(function (err, person) {
-        if (err || !person) {
-          reject(new Error('directorHref', 'Path `directorHref` does not reference a Person that exists', value, 'resourceNotFound'));
+      .then((person) => {
+        if (!person) {
+          throw new Error(`directorHref Path \`directorHref\` does not reference a Person that exists`);
+        } else {
+          resolve(true);
         }
-      }).catch(e => { reject(e) });
+      })
+      .catch(e => { reject(e) });
   })
+
+
 }
 
 /**
@@ -87,9 +92,9 @@ function validateDirector(value) {
  */
 function validateMovieTitleUniqueness(value) {
   let MovieModel = mongoose.model('Movie', movieSchema);
-
-  return MovieModel.findOne().where('title').equals(value).exec().then(function (existingMovie) {
-    return (!existingMovie || existingMovie._id.equals(value._id))
+  
+  return MovieModel.findOne().where('title').equals(value).exec().then( (existingMovie) => {
+    return !existingMovie || existingMovie._id.equals(this._id)
   });
 }
 
