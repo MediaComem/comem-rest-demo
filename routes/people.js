@@ -115,7 +115,7 @@ router.get('/', function(req, res, next) {
         $lookup: {
           from: 'movies',
           localField: '_id',
-          foreignField: 'director',
+          foreignField: 'directorId',
           as: 'directedMovies'
         }
       },
@@ -335,7 +335,7 @@ router.put('/:id', utils.requireJson, loadPersonFromParamsMiddleware, function(r
  */
 router.delete('/:id', loadPersonFromParamsMiddleware, function(req, res, next) {
   // Check if a movie exists before deleting
-  Movie.findOne({ director: req.person._id }).exec(function(err, movie) {
+  Movie.findOne({ directorId: req.person._id }).exec(function(err, movie) {
     if (err) {
       return next(err);
     } else if (movie) {
@@ -402,7 +402,7 @@ function personNotFound(res, personId) {
  * Given a person, asynchronously returns the number of movies directed by the person.
  */
 function countMoviesDirectedBy(person, callback) {
-  Movie.count().where('director', person._id).exec(callback);
+  Movie.count().where('directorId', person._id).exec(callback);
 }
 
 /**
