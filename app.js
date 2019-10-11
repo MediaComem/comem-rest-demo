@@ -21,7 +21,7 @@ if (process.env.DEBUG) {
 
 // View engine setup
 app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'jade');
+app.set('view engine', 'pug');
 
 // General middlewares
 app.use(logger('dev'));

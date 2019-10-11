@@ -7,7 +7,7 @@ A demonstration RESTful API implemented with [Express][express].
 ## Requirements
 
 * [Node.js][node] 12.x
-* [MongoDB][mongo] 3.x
+* [MongoDB][mongo] 4.x
 
 
 

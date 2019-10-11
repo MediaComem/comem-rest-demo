@@ -10,19 +10,19 @@
     "start": "node ./bin/www"
   },
   "dependencies": {
-    "body-parser": "~1.16.0",
-    "debug": "~2.6.0",
-    "express": "~4.14.1",
-    "format-link-header": "^2.0.0",
-    "jade": "~1.11.0",
-    "mongoose": "^4.8.4",
-    "morgan": "~1.7.0"
+    "body-parser": "~1.19.0",
+    "debug": "~4.1.1",
+    "express": "~4.17.1",
+    "format-link-header": "^2.1.0",
+    "mongoose": "^5.7.4",
+    "morgan": "~1.9.1",
+    "pug": "^2.0.4"
   },
   "devDependencies": {
-    "apidoc": "^0.17.5",
-    "concurrently": "^3.3.0",
-    "nodemon": "^1.11.0",
-    "onchange": "^3.2.1"
+    "apidoc": "^0.17.7",
+    "concurrently": "^5.0.0",
+    "nodemon": "^1.19.3",
+    "onchange": "^6.1.0"
   },
   "engines": {
     "node": "12.x"

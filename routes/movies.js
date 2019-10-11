@@ -43,8 +43,8 @@ const router = express.Router();
  *       "createdAt": "1988-07-12T00:00:00.000Z"
  *     }
  */
-router.post('/', utils.requireJson, function(req, res, next) {
-  new Movie(req.body).save(function(err, savedMovie) {
+router.post('/', utils.requireJson, function (req, res, next) {
+  new Movie(req.body).save(function (err, savedMovie) {
     if (err) {
       return next(err);
     }
@@ -99,11 +99,11 @@ router.post('/', utils.requireJson, function(req, res, next) {
  *       }
  *     ]
  */
-router.get('/', function(req, res, next) {
+router.get('/', function (req, res, next) {
 
   // Count total movies matching the URL query parameters
   const countQuery = queryMovies(req);
-  countQuery.count(function(err, total) {
+  countQuery.count(function (err, total) {
     if (err) {
       return next(err);
     }
@@ -126,7 +126,7 @@ router.get('/', function(req, res, next) {
     }
 
     // Execute the query
-    query.sort({ title: 1 }).exec(function(err, movies) {
+    query.sort({ title: 1 }).exec(function (err, movies) {
       if (err) {
         return next(err);
       }
@@ -163,7 +163,7 @@ router.get('/', function(req, res, next) {
  *       "createdAt": "1988-07-12T00:00:00.000Z"
  *     }
  */
-router.get('/:id', loadMovieFromParamsMiddleware, function(req, res, next) {
+router.get('/:id', loadMovieFromParamsMiddleware, function (req, res, next) {
   res.send(req.movie);
 });
 
@@ -201,17 +201,18 @@ router.get('/:id', loadMovieFromParamsMiddleware, function(req, res, next) {
  *       "createdAt": "1988-07-12T00:00:00.000Z"
  *     }
  */
-router.patch('/:id', utils.requireJson, loadMovieFromParamsMiddleware, function(req, res, next) {
+router.patch('/:id', utils.requireJson, loadMovieFromParamsMiddleware, function (req, res, next) {
 
   // Update only properties present in the request body
   if (req.body.title !== undefined) {
     req.movie.title = req.body.title;
   }
+
   if (req.body.rating !== undefined) {
     req.movie.rating = req.body.rating;
   }
 
-  req.movie.save(function(err, savedMovie) {
+  req.movie.save(function (err, savedMovie) {
     if (err) {
       return next(err);
     }
@@ -256,13 +257,13 @@ router.patch('/:id', utils.requireJson, loadMovieFromParamsMiddleware, function(
  *       "createdAt": "1988-07-12T00:00:00.000Z"
  *     }
  */
-router.put('/:id', utils.requireJson, loadMovieFromParamsMiddleware, function(req, res, next) {
+router.put('/:id', utils.requireJson, loadMovieFromParamsMiddleware, function (req, res, next) {
 
   // Update all properties (regardless of whether the are present in the request body or not)
   req.movie.title = req.body.title;
   req.movie.rating = req.body.rating;
 
-  req.movie.save(function(err, savedMovie) {
+  req.movie.save(function (err, savedMovie) {
     if (err) {
       return next(err);
     }
@@ -288,8 +289,8 @@ router.put('/:id', utils.requireJson, loadMovieFromParamsMiddleware, function(re
  * @apiSuccessExample 204 No Content
  *     HTTP/1.1 204 No Content
  */
-router.delete('/:id', loadMovieFromParamsMiddleware, function(req, res, next) {
-  req.movie.remove(function(err) {
+router.delete('/:id', loadMovieFromParamsMiddleware, function (req, res, next) {
+  req.movie.remove(function (err) {
     if (err) {
       return next(err);
     }
@@ -346,7 +347,7 @@ function loadMovieFromParamsMiddleware(req, res, next) {
     query = query.populate('director');
   }
 
-  query.exec(function(err, movie) {
+  query.exec(function (err, movie) {
     if (err) {
       return next(err);
     } else if (!movie) {
