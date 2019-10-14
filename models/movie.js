@@ -32,6 +32,7 @@ const movieSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: 'Person',
     default: null,
+    required:true,
     validate: {
       // Validate that the directorId is a valid ObjectId
       // and references an existing person
@@ -56,9 +57,7 @@ movieSchema.set('toJSON', {
 function validateDirector(value) {
   return new Promise((resolve, reject) => {
 
-    if (!value) {
-      throw new Error(`directorId is required`);
-    } else if (!ObjectId.isValid(value)) {
+    if (!ObjectId.isValid(value)) {
       throw new Error(`directorId is not a valid Person reference`);
     }
 
@@ -100,7 +99,7 @@ function transformJsonMovie(doc, json, options) {
 
   if (!(json.directorId instanceof ObjectId)) {
     // If the director was populated, include it in the serialization
-    json.directorId = doc.directorId.toJSON();
+    json.director = doc.directorId.toJSON();
   }
 
   return json;

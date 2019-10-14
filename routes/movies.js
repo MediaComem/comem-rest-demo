@@ -121,8 +121,8 @@ router.get('/', function (req, res, next) {
     utils.addLinkHeader('/api/movies', page, pageSize, total, res);
 
     // Populate the directorId if indicated in the "include" URL query parameter
-    if (utils.responseShouldInclude(req, 'directorId')) {
-      query = query.populate('directorId');
+    if (utils.responseShouldInclude(req, 'director')) {
+      query = query.populate('director');
     }
 
     // Execute the query
