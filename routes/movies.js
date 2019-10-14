@@ -122,7 +122,7 @@ router.get('/', function (req, res, next) {
 
     // Populate the directorId if indicated in the "include" URL query parameter
     if (utils.responseShouldInclude(req, 'director')) {
-      query = query.populate('director');
+      query = query.populate('directorId');
     }
 
     // Execute the query
@@ -341,9 +341,8 @@ function loadMovieFromParamsMiddleware(req, res, next) {
   }
 
   let query = Movie.findById(movieId)
-
-  // Populate the directorId if indicated in the "include" URL query parameter
-  if (utils.responseShouldInclude(req, 'directorId')) {
+  // Populate the director if indicated in the "include" URL query parameter
+  if (utils.responseShouldInclude(req, 'director')) {
     query = query.populate('directorId');
   }
 
@@ -390,7 +389,7 @@ function movieNotFound(res, movieId) {
 /**
  * @apiDefine MovieIncludes
  * @apiParam (URL query parameters) {String} [include] Embed linked resources in the response body:
- * * `"directorId"` for the movie's directorId
+ * * `"director"` for the movie's director
  */
 
 /**
