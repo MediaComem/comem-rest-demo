@@ -27,7 +27,7 @@ const router = express.Router();
  *     {
  *       "title": "Die Hard",
  *       "rating": 7.4,
- *       "directorHref": "/api/people/58b2926f5e1def0123e97bc0"
+ *       "directorId": "58b2926f5e1def0123e97bc0"
  *     }
  *
  * @apiSuccessExample 201 Created
@@ -39,7 +39,7 @@ const router = express.Router();
  *       "id": "58b2926f5e1def0123e97281",
  *       "title": "Die Hard",
  *       "rating": 7.4,
- *       "directorHref": "/api/people/58b2926f5e1def0123e97bc0",
+ *       "directorId": "58b2926f5e1def0123e97bc0",
  *       "createdAt": "1988-07-12T00:00:00.000Z"
  *     }
  */
@@ -69,13 +69,13 @@ router.post('/', utils.requireJson, function (req, res, next) {
  * @apiUse MovieIncludes
  * @apiUse Pagination
  *
- * @apiParam (URL query parameters) {String} [director] Select only movies directed by the person with the specified ID (this parameter can be given multiple times)
+ * @apiParam (URL query parameters) {String} [directorId] Select only movies directed by the person with the specified ID (this parameter can be given multiple times)
  * @apiParam (URL query parameters) {Number} [rating] Select only movies with the specified rating (exact match)
  * @apiParam (URL query parameters) {Number} [ratedAtLeast] Select only movies with a rating greater than or equal to the specified rating
  * @apiParam (URL query parameters) {Number} [ratedAtMost] Select only movies with a rating lesser than or equal to the specified rating
  *
  * @apiExample Example
- *     GET /api/movies?director=58b2926f5e1def0123e97bc0&page=2&pageSize=50 HTTP/1.1
+ *     GET /api/movies?directorId=58b2926f5e1def0123e97bc0&page=2&pageSize=50 HTTP/1.1
  *
  * @apiSuccessExample 200 OK
  *     HTTP/1.1 200 OK
@@ -87,14 +87,14 @@ router.post('/', utils.requireJson, function (req, res, next) {
  *         "id": "58b2926f5e1def0123e97281",
  *         "title": "Die Hard",
  *         "rating": 7.4,
- *         "directorHref": "/api/people/58b2926f5e1def0123e97bc0",
+ *         "directorId": "58b2926f5e1def0123e97bc0",
  *         "createdAt": "1988-07-12T00:00:00.000Z"
  *       },
  *       {
  *         "id": "58b2926f5e1def0123e97282",
  *         "title": "Die Hard With a Vengance",
  *         "rating": 8.3,
- *         "directorHref": "/api/people/58b2926f5e1def0123e97bc0",
+ *         "directorId": "58b2926f5e1def0123e97bc0",
  *         "createdAt": "1995-05-19T00:00:00.000Z"
  *       }
  *     ]
@@ -120,9 +120,9 @@ router.get('/', function (req, res, next) {
     // Add the Link header to the response
     utils.addLinkHeader('/api/movies', page, pageSize, total, res);
 
-    // Populate the director if indicated in the "include" URL query parameter
+    // Populate the directorId if indicated in the "include" URL query parameter
     if (utils.responseShouldInclude(req, 'director')) {
-      query = query.populate('director');
+      query = query.populate('directorId');
     }
 
     // Execute the query
@@ -159,7 +159,7 @@ router.get('/', function (req, res, next) {
  *       "id": "58b2926f5e1def0123e97281",
  *       "title": "Die Hard",
  *       "rating": 7.4,
- *       "directorHref": "/api/people/58b2926f5e1def0123e97bc0",
+ *       "directorId": "58b2926f5e1def0123e97bc0",
  *       "createdAt": "1988-07-12T00:00:00.000Z"
  *     }
  */
@@ -197,7 +197,7 @@ router.get('/:id', loadMovieFromParamsMiddleware, function (req, res, next) {
  *       "id": "58b2926f5e1def0123e97281",
  *       "title": "Die Hard",
  *       "rating": 6.7,
- *       "directorHref": "/api/people/58b2926f5e1def0123e97bc0",
+ *       "directorId": "58b2926f5e1def0123e97bc0",
  *       "createdAt": "1988-07-12T00:00:00.000Z"
  *     }
  */
@@ -242,7 +242,7 @@ router.patch('/:id', utils.requireJson, loadMovieFromParamsMiddleware, function 
  *     {
  *       "title": "Die Hard 2",
  *       "rating": 5.6,
- *       "directorHref": "/api/people/58b2926f5e1def0123e97aa2"
+ *       "directorId": "58b2926f5e1def0123e97aa2"
  *     }
  *
  * @apiSuccessExample 200 OK
@@ -253,7 +253,7 @@ router.patch('/:id', utils.requireJson, loadMovieFromParamsMiddleware, function 
  *       "id": "58b2926f5e1def0123e97281",
  *       "title": "Die Hard",
  *       "rating": 5.6,
- *       "directorHref": "/api/people/58b2926f5e1def0123e97aa2",
+ *       "directorId": "58b2926f5e1def0123e97aa2",
  *       "createdAt": "1988-07-12T00:00:00.000Z"
  *     }
  */
@@ -307,11 +307,11 @@ function queryMovies(req) {
 
   let query = Movie.find();
 
-  if (Array.isArray(req.query.director)) {
-    const directors = req.query.director.filter(ObjectId.isValid);
-    query = query.where('director').in(directors);
-  } else if (ObjectId.isValid(req.query.director)) {
-    query = query.where('director').equals(req.query.director);
+  if (Array.isArray(req.query.directorId)) {
+    const directors = req.query.directorId.filter(ObjectId.isValid);
+    query = query.where('directorId').in(directors);
+  } else if (ObjectId.isValid(req.query.directorId)) {
+    query = query.where('directorId').equals(req.query.directorId);
   }
 
   if (!isNaN(req.query.rating)) {
@@ -341,10 +341,9 @@ function loadMovieFromParamsMiddleware(req, res, next) {
   }
 
   let query = Movie.findById(movieId)
-
   // Populate the director if indicated in the "include" URL query parameter
   if (utils.responseShouldInclude(req, 'director')) {
-    query = query.populate('director');
+    query = query.populate('directorId');
   }
 
   query.exec(function (err, movie) {
@@ -375,7 +374,7 @@ function movieNotFound(res, movieId) {
  * @apiDefine MovieInRequestBody
  * @apiParam (Request body) {String{3..50}} title The title of the movie (must be unique)
  * @apiParam (Request body) {Number{0..10}} [rating] How the movie has been rated on a scale of 0 to 10
- * @apiParam (Request body) {String} directorHref A hyperlink reference to the person who directed the movie (either the full path to the resource, e.g. `/api/people/58b2926f5e1def0123e97bc0`, or just the ID, e.g. `58b2926f5e1def0123e97bc0`)
+ * @apiParam (Request body) {String} directorId An Id who is referencing to the person who directed the movie (eg: `58b2926f5e1def0123e97bc0`)
  */
 
 /**
@@ -383,7 +382,7 @@ function movieNotFound(res, movieId) {
  * @apiSuccess (Response body) {String} id The unique identifier of the movie
  * @apiSuccess (Response body) {String} title The title of the movie
  * @apiSuccess (Response body) {Number} rating How the movie has been rated on a scale of 0 to 10
- * @apiSuccess (Response body) {String} directorHref A hyperlink reference to the person who directed the movie
+ * @apiSuccess (Response body) {String} directorId An Id who is referencing to the person who directed the movie (eg: `58b2926f5e1def0123e97bc0`)
  * @apiSuccess (Response body) {String} createdAt The date at which the movie was registered
  */
 
