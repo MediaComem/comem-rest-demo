@@ -14,7 +14,7 @@
     "debug": "~4.1.1",
     "express": "~4.17.1",
     "format-link-header": "^2.1.0",
-    "mongoose": "^5.7.4",
+    "mongoose": "^5.7.5",
     "morgan": "~1.9.1",
     "pug": "^2.0.4"
   },
