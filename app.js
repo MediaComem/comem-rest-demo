@@ -7,7 +7,11 @@ const path = require('path');
 
 // Connect to the database (can be overriden from environment)
 mongoose.Promise = Promise;
-mongoose.connect(config.databaseUrl);
+mongoose.connect(config.databaseUrl, {
+  useCreateIndex: true,
+  useNewUrlParser: true,
+  useUnifiedTopology: true
+});
 
 const moviesApi = require('./routes/movies');
 const peopleApi = require('./routes/people');
