@@ -99,6 +99,7 @@ function transformJsonMovie(doc, json, options) {
   if (!(json.directorId instanceof ObjectId)) {
     // If the director was populated, include it in the serialization
     json.director = doc.directorId.toJSON();
+    json.directorId = doc.directorId._id;
   }
 
   return json;
