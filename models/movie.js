@@ -80,8 +80,7 @@ function validateDirector(value) {
  * (or the only movie that exists is the same as the movie being validated).
  */
 function validateMovieTitleUniqueness(value) {
-  let MovieModel = mongoose.model('Movie', movieSchema);
-  
+  const MovieModel = mongoose.model('Movie', movieSchema);
   return MovieModel.findOne().where('title').equals(value).exec().then( (existingMovie) => {
     return !existingMovie || existingMovie._id.equals(this._id)
   });
