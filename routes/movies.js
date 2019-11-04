@@ -44,6 +44,23 @@ const router = express.Router();
  *     }
  */
 router.post('/', utils.requireJson, function (req, res, next) {
+
+  // BUGFIX: validate ObjectId reference before attempting to save. This is to
+  // avoid a Mongoose issue where casting fails before custom validation can be
+  // applied: https://github.com/Automattic/mongoose/issues/8300
+  if (req.body.directorId && !ObjectId.isValid(req.body.directorId)) {
+    return res.status(422).send({
+      message: `Movie validation failed: directorId: must be a valid person reference`,
+      errors: {
+        directorId: {
+          message: 'must be a valid person reference',
+          path: 'directorId',
+          value: req.body.directorId
+        }
+      }
+    });
+  }
+
   new Movie(req.body).save(function (err, savedMovie) {
     if (err) {
       return next(err);
