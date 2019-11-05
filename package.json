@@ -7,7 +7,8 @@
     "apidoc:watch": "onchange APIDOC.md routes/**/*.js -- npm run apidoc",
     "dev": "concurrently \"npm run nodemon\" \"npm run apidoc:watch\"",
     "nodemon": "DEBUG=demo:* AUTH_TOKEN=secret nodemon",
-    "start": "node ./bin/www"
+    "start": "node ./bin/www",
+    "test": "cross-env MONGODB_URI=mongodb://localhost/comem-webdev-express-rest-demo-test NODE_ENV=test nyc --reporter=html mocha spec/**/*.spec.js"
   },
   "dependencies": {
     "body-parser": "~1.19.0",
@@ -20,9 +21,14 @@
   },
   "devDependencies": {
     "apidoc": "^0.17.7",
+    "chai": "^4.2.0",
     "concurrently": "^5.0.0",
+    "cross-env": "^6.0.3",
+    "mocha": "^6.2.2",
     "nodemon": "^1.19.4",
-    "onchange": "^6.1.0"
+    "nyc": "^14.1.1",
+    "onchange": "^6.1.0",
+    "supertest": "^4.0.2"
   },
   "engines": {
     "node": "12.x"
