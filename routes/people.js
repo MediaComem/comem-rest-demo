@@ -102,7 +102,7 @@ router.post('/', utils.requireJson, function(req, res, next) {
 router.get('/', function(req, res, next) {
 
   const countQuery = queryPeople(req);
-  countQuery.count(function(err, total) {
+  countQuery.countDocuments(function(err, total) {
     if (err) {
       return next(err);
     }
@@ -402,7 +402,7 @@ function personNotFound(res, personId) {
  * Given a person, asynchronously returns the number of movies directed by the person.
  */
 function countMoviesDirectedBy(person, callback) {
-  Movie.count().where('directorId', person._id).exec(callback);
+  Movie.countDocuments().where('directorId', person._id).exec(callback);
 }
 
 /**
