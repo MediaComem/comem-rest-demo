@@ -32,12 +32,12 @@ const movieSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: 'Person',
     default: null,
-    required:true,
+    required: true,
     validate: {
       // Validate that the directorId is a valid ObjectId
       // and references an existing person
       validator: validateDirector,
-      message: function(props) { return props.reason.message; }
+      message: props => props.reason.message
     }
   }
 });
@@ -55,24 +55,17 @@ movieSchema.set('toJSON', {
  * the "directorId" property is invalidated.
  */
 function validateDirector(value) {
-  return new Promise((resolve, reject) => {
+  if (!ObjectId.isValid(value)) {
+    throw new Error('person not found');
+  }
 
-    if (!ObjectId.isValid(value)) {
-      throw new Error(`directorId is not a valid Person reference`);
+  return mongoose.model('Person').findOne({ _id: ObjectId(value) }).exec().then(person => {
+    if (!person) {
+      throw new Error('person not found');
     }
 
-    mongoose.model('Person').findOne({ _id: ObjectId(value) }).exec()
-      .then((person) => {
-        if (!person) {
-          throw new Error(`directorId does not reference a Person that exists`);
-        } else {
-          resolve(true);
-        }
-      })
-      .catch(e => { reject(e) });
-  })
-
-
+    return true;
+  });
 }
 
 /**

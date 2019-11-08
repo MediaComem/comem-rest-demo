@@ -50,10 +50,10 @@ router.post('/', utils.requireJson, function (req, res, next) {
   // applied: https://github.com/Automattic/mongoose/issues/8300
   if (req.body.directorId && !ObjectId.isValid(req.body.directorId)) {
     return res.status(422).send({
-      message: `Movie validation failed: directorId: must be a valid person reference`,
+      message: 'Movie validation failed: directorId: person not found',
       errors: {
         directorId: {
-          message: 'must be a valid person reference',
+          message: 'person not found',
           path: 'directorId',
           value: req.body.directorId
         }
