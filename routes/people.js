@@ -120,14 +120,33 @@ router.get('/', function(req, res, next) {
         }
       },
       {
-        $unwind: '$directedMovies'
+        $unwind: {
+          path: '$directedMovies',
+          // Preserve people who have not directed any movie
+          // ("directedMovies" will be null).
+          preserveNullAndEmptyArrays: true
+        }
+      },
+      // Replace "directedMovies" by 1 when set, or by 0 when null.
+      {
+        $set: {
+          directedMovies: {
+            $cond: {
+              if: '$directedMovies',
+              then: 1,
+              else: 0
+            }
+          }
+        }
       },
       {
         $group: {
           _id: '$_id',
           birthDate: { $first: '$birthDate' },
           createdAt: { $first: '$createdAt' },
-          directedMovies: { $sum: 1 },
+          // Sum the 1s and 0s in the "directedMovies" property
+          // to obtain the final count.
+          directedMovies: { $sum: '$directedMovies' },
           gender: { $first: '$gender' },
           name: { $first: '$name' }
         }
