@@ -1,9 +1,13 @@
 const bodyParser = require('body-parser');
-const config = require('./config');
 const express = require('express');
 const logger = require('morgan');
 const mongoose = require('mongoose');
 const path = require('path');
+
+const config = require('./config');
+const moviesApi = require('./routes/movies');
+const peopleApi = require('./routes/people');
+const adminRoutes = require('./routes/admin');
 
 // Connect to the database (can be overriden from environment)
 mongoose.Promise = Promise;
@@ -13,13 +17,9 @@ mongoose.connect(config.databaseUrl, {
   useUnifiedTopology: true
 });
 
-const moviesApi = require('./routes/movies');
-const peopleApi = require('./routes/people');
-const adminRoutes = require('./routes/admin');
-
 const app = express();
 
-if (process.env.DEBUG) {
+if (config.debug) {
   mongoose.set('debug', true);
 }
 
@@ -28,7 +28,7 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
 
 // General middlewares
-if (process.env.NODE_ENV !== 'test') {
+if (config.env !== 'test') {
   app.use(logger('dev'));
 }
 app.use(bodyParser.json());

@@ -1,4 +1,4 @@
-const config = require('../config');
+const { authToken, baseUrl } = require('../config');
 const formatLinkHeader = require('format-link-header');
 
 /**
@@ -49,7 +49,7 @@ exports.getPaginationParameters = function(req) {
 exports.addLinkHeader = function(resourceHref, page, pageSize, total, res) {
 
   const links = {};
-  const url = config.baseUrl + resourceHref;
+  const url = baseUrl + resourceHref;
   const maxPage = Math.ceil(total / pageSize);
 
   // Add first & prev links if current page is not the first one
@@ -96,7 +96,7 @@ exports.responseShouldInclude = function(req, property) {
  * equal to the $AUTH_TOKEN environment variable.
  */
 exports.authenticate = function(req, res, next) {
-  if (!process.env.AUTH_TOKEN) {
+  if (!authToken) {
     return res.sendStatus(401);
   }
 
@@ -110,7 +110,7 @@ exports.authenticate = function(req, res, next) {
     return res.sendStatus(401);
   }
 
-  if (match[1] != process.env.AUTH_TOKEN) {
+  if (match[1] !== authToken) {
     return res.sendStatus(401);
   }
 
