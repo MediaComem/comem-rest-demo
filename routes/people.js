@@ -129,7 +129,7 @@ router.get('/', function(req, res, next) {
       },
       // Replace "directedMovies" by 1 when set, or by 0 when null.
       {
-        $set: {
+        $addFields: {
           directedMovies: {
             $cond: {
               if: '$directedMovies',
