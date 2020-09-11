@@ -1,4 +1,4 @@
-# COMEM+ Web Development Express REST Demo
+# COMEM+ REST Demo
 
 A demonstration RESTful API implemented with [Express][express].
 
