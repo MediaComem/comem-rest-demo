@@ -1,6 +1,6 @@
 const env = process.env.NODE_ENV || 'development';
 
-let defaultDatabaseUrl = 'mongodb://localhost/comem-webdev-express-rest-demo';
+let defaultDatabaseUrl = 'mongodb://localhost/comem-rest-demo';
 if (env === 'test') {
   defaultDatabaseUrl = `${defaultDatabaseUrl}-test`;
 }
