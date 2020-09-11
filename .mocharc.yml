@@ -1,0 +1,16 @@
+# https://github.com/mochajs/mocha/blob/master/example/config/.mocharc.yml
+extension:
+  - js
+ignore: &ignore
+  - coverage
+  - docs
+  - node_modules
+reporter: spec
+spec: spec/**/*.spec.js
+watch-files:
+  - '*.js'
+  - bin/*
+  - models/**/*.js
+  - routes/**/*.js
+  - spec/**/*.js
+watch-ignore: *ignore

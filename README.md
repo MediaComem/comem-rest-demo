@@ -2,6 +2,9 @@
 
 A demonstration RESTful API implemented with [Express][express].
 
+[![GitHub](https://img.shields.io/github/license/MediaComem/comem-webdev-express-rest-demo)](https://opensource.org/licenses/MIT)
+[![Build Status](https://travis-ci.org/MediaComem/comem-webdev-express-rest-demo.svg?branch=master)](https://travis-ci.org/MediaComem/comem-webdev-express-rest-demo)
+
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 

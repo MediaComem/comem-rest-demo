@@ -392,7 +392,7 @@
             "type": "String",
             "optional": true,
             "field": "include",
-            "description": "<p>Embed linked resources in the response body:</p> <ul> <li><code>&quot;directorId&quot;</code> for the movie's directorId</li> </ul>"
+            "description": "<p>Embed linked resources in the response body:</p> <ul> <li><code>&quot;director&quot;</code> for the movie's director</li> </ul>"
           }
         ]
       }
@@ -462,7 +462,7 @@
             "type": "String",
             "optional": true,
             "field": "include",
-            "description": "<p>Embed linked resources in the response body:</p> <ul> <li><code>&quot;directorId&quot;</code> for the movie's directorId</li> </ul>"
+            "description": "<p>Embed linked resources in the response body:</p> <ul> <li><code>&quot;director&quot;</code> for the movie's director</li> </ul>"
           },
           {
             "group": "URL query parameters",

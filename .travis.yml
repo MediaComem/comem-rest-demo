@@ -1,0 +1,7 @@
+# https://docs.travis-ci.com/user/languages/javascript-with-nodejs/
+language: node_js
+node_js:
+  - 14
+services:
+  - mongodb
+script: npm run test:ci
