@@ -4,4 +4,6 @@ node_js:
   - 14
 services:
   - mongodb
+before-script:
+  - mongo --version
 script: npm run test:ci
