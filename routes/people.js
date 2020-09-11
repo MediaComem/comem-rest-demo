@@ -432,7 +432,7 @@ function countMoviesDirectedBy(person, callback) {
 /**
  * @apiDefine PersonInRequestBody
  * @apiParam (Request body) {String{3..30}} name The name of the person (must be unique)
- * @apiParam (Request body) {String="male","female"} gender The gender of the person
+ * @apiParam (Request body) {String="male","female","other"} gender The gender of the person
  * @apiParam (Request body) {String} [birthDate] The birth date of the person ([ISO-8601](https://en.wikipedia.org/wiki/ISO_8601) format)
  */
 
@@ -478,7 +478,8 @@ function countMoviesDirectedBy(person, callback) {
  *           "properties": {
  *             "enumValues": [
  *               "male",
- *               "female"
+ *               "female",
+ *               "other"
  *             ],
  *             "message": "`{VALUE}` is not a valid enum value for path `{PATH}`.",
  *             "path": "gender",

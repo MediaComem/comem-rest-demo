@@ -24,7 +24,7 @@ const personSchema = new Schema({
   gender: {
     type: String,
     required: true,
-    enum: ['male', 'female']
+    enum: ['male', 'female', 'other']
   },
   birthDate: {
     type: Date
