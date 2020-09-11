@@ -34,7 +34,7 @@ const router = express.Router();
  * @apiSuccessExample 201 Created
  *     HTTP/1.1 201 Created
  *     Content-Type: application/json
- *     Location: https://evening-meadow-25867.herokuapp.com/api/people/58b2926f5e1def0123e97bc0
+ *     Location: https://comem-rest-demo.herokuapp.com/api/people/58b2926f5e1def0123e97bc0
  *
  *     {
  *       "id": "58b2926f5e1def0123e97bc0",
@@ -78,7 +78,7 @@ router.post('/', utils.requireJson, function(req, res, next) {
  * @apiSuccessExample 200 OK
  *     HTTP/1.1 200 OK
  *     Content-Type: application/json
- *     Link: &lt;https://evening-meadow-25867.herokuapp.com/api/people?page=1&pageSize=50&gt;; rel="first prev"
+ *     Link: &lt;https://comem-rest-demo.herokuapp.com/api/people?page=1&pageSize=50&gt;; rel="first prev"
  *
  *     [
  *       {
