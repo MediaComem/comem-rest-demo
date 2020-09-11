@@ -50,7 +50,7 @@ define({ "api": [
       "examples": [
         {
           "title": "201 Created",
-          "content": "HTTP/1.1 201 Created\nContent-Type: application/json\nLocation: https://evening-meadow-25867.herokuapp.com/api/movies/58b2926f5e1def0123e97281\n\n{\n  \"id\": \"58b2926f5e1def0123e97281\",\n  \"title\": \"Die Hard\",\n  \"rating\": 7.4,\n  \"directorId\": \"58b2926f5e1def0123e97bc0\",\n  \"createdAt\": \"1988-07-12T00:00:00.000Z\"\n}",
+          "content": "HTTP/1.1 201 Created\nContent-Type: application/json\nLocation: https://comem-rest-demo.herokuapp.com/api/movies/58b2926f5e1def0123e97281\n\n{\n  \"id\": \"58b2926f5e1def0123e97281\",\n  \"title\": \"Die Hard\",\n  \"rating\": 7.4,\n  \"directorId\": \"58b2926f5e1def0123e97bc0\",\n  \"createdAt\": \"1988-07-12T00:00:00.000Z\"\n}",
           "type": "json"
         }
       ]
@@ -494,7 +494,7 @@ define({ "api": [
       "examples": [
         {
           "title": "200 OK",
-          "content": "HTTP/1.1 200 OK\nContent-Type: application/json\nLink: &lt;https://evening-meadow-25867.herokuapp.com/api/movies?page=1&pageSize=50&gt;; rel=\"first prev\"\n\n[\n  {\n    \"id\": \"58b2926f5e1def0123e97281\",\n    \"title\": \"Die Hard\",\n    \"rating\": 7.4,\n    \"directorId\": \"58b2926f5e1def0123e97bc0\",\n    \"createdAt\": \"1988-07-12T00:00:00.000Z\"\n  },\n  {\n    \"id\": \"58b2926f5e1def0123e97282\",\n    \"title\": \"Die Hard With a Vengance\",\n    \"rating\": 8.3,\n    \"directorId\": \"58b2926f5e1def0123e97bc0\",\n    \"createdAt\": \"1995-05-19T00:00:00.000Z\"\n  }\n]",
+          "content": "HTTP/1.1 200 OK\nContent-Type: application/json\nLink: &lt;https://comem-rest-demo.herokuapp.com/api/movies?page=1&pageSize=50&gt;; rel=\"first prev\"\n\n[\n  {\n    \"id\": \"58b2926f5e1def0123e97281\",\n    \"title\": \"Die Hard\",\n    \"rating\": 7.4,\n    \"directorId\": \"58b2926f5e1def0123e97bc0\",\n    \"createdAt\": \"1988-07-12T00:00:00.000Z\"\n  },\n  {\n    \"id\": \"58b2926f5e1def0123e97282\",\n    \"title\": \"Die Hard With a Vengance\",\n    \"rating\": 8.3,\n    \"directorId\": \"58b2926f5e1def0123e97bc0\",\n    \"createdAt\": \"1995-05-19T00:00:00.000Z\"\n  }\n]",
           "type": "json"
         }
       ],
@@ -744,7 +744,7 @@ define({ "api": [
       "examples": [
         {
           "title": "201 Created",
-          "content": "HTTP/1.1 201 Created\nContent-Type: application/json\nLocation: https://evening-meadow-25867.herokuapp.com/api/people/58b2926f5e1def0123e97bc0\n\n{\n  \"id\": \"58b2926f5e1def0123e97bc0\",\n  \"name\": \"John Doe\",\n  \"gender\": \"male\",\n  \"birthDate\": \"2001-02-03T08:30:00.000Z\",\n  \"createdAt\": \"2017-01-01T14:31:87.000Z\",\n  \"directedMovies\": 0\n}",
+          "content": "HTTP/1.1 201 Created\nContent-Type: application/json\nLocation: https://comem-rest-demo.herokuapp.com/api/people/58b2926f5e1def0123e97bc0\n\n{\n  \"id\": \"58b2926f5e1def0123e97bc0\",\n  \"name\": \"John Doe\",\n  \"gender\": \"male\",\n  \"birthDate\": \"2001-02-03T08:30:00.000Z\",\n  \"createdAt\": \"2017-01-01T14:31:87.000Z\",\n  \"directedMovies\": 0\n}",
           "type": "json"
         }
       ]
@@ -1065,7 +1065,7 @@ define({ "api": [
       "examples": [
         {
           "title": "200 OK",
-          "content": "HTTP/1.1 200 OK\nContent-Type: application/json\nLink: &lt;https://evening-meadow-25867.herokuapp.com/api/people?page=1&pageSize=50&gt;; rel=\"first prev\"\n\n[\n  {\n    \"id\": \"58b2926f5e1def0123e97bc0\",\n    \"name\": \"John Doe\",\n    \"gender\": \"male\",\n    \"birthDate\": \"2001-02-03T08:30:00.000Z\",\n    \"createdAt\": \"2017-01-01T14:31:87.000Z\",\n    \"directedMovies\": 2\n  },\n  {\n    \"id\": \"58b2926f5e1def0123e97bc1\",\n    \"name\": \"John Smith\",\n    \"gender\": \"male\",\n    \"birthDate\": \"2001-02-04T07:00:00.000Z\",\n    \"createdAt\": \"2017-01-11T09:12:12.000Z\",\n    \"directedMovies\": 3\n  }\n]",
+          "content": "HTTP/1.1 200 OK\nContent-Type: application/json\nLink: &lt;https://comem-rest-demo.herokuapp.com/api/people?page=1&pageSize=50&gt;; rel=\"first prev\"\n\n[\n  {\n    \"id\": \"58b2926f5e1def0123e97bc0\",\n    \"name\": \"John Doe\",\n    \"gender\": \"male\",\n    \"birthDate\": \"2001-02-03T08:30:00.000Z\",\n    \"createdAt\": \"2017-01-01T14:31:87.000Z\",\n    \"directedMovies\": 2\n  },\n  {\n    \"id\": \"58b2926f5e1def0123e97bc1\",\n    \"name\": \"John Smith\",\n    \"gender\": \"male\",\n    \"birthDate\": \"2001-02-04T07:00:00.000Z\",\n    \"createdAt\": \"2017-01-11T09:12:12.000Z\",\n    \"directedMovies\": 3\n  }\n]",
           "type": "json"
         }
       ],
