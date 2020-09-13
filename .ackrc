@@ -1,1 +1,3 @@
+--ignore-dir=coverage
 --ignore-dir=docs
+--ignore-dir=.nyc_output
