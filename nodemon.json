@@ -3,6 +3,7 @@
     "app.js",
     "bin/www",
     "models/**/*.js",
-    "routes/**/*.js"
+    "routes/**/*.js",
+    "unrest/**/*.js"
   ]
 }

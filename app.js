@@ -8,6 +8,7 @@ const config = require('./config');
 const moviesApi = require('./routes/movies');
 const peopleApi = require('./routes/people');
 const adminRoutes = require('./routes/admin');
+const unrestRoutes = require('./unrest/routes');
 
 // Connect to the database (can be overriden from environment)
 mongoose.Promise = Promise;
@@ -39,6 +40,7 @@ app.use(express.static(path.join(__dirname, 'docs')));
 app.use('/api/movies', moviesApi);
 app.use('/api/people', peopleApi);
 app.use('/admin', adminRoutes);
+app.use('/unrest', unrestRoutes);
 
 // Catch 404 and forward to error handler
 app.use(function(req, res, next) {
