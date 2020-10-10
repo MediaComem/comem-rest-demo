@@ -1,8 +1,11 @@
 const bodyParser = require('body-parser');
 const express = require('express');
+const fs = require('fs');
+const yaml = require('js-yaml');
 const logger = require('morgan');
 const mongoose = require('mongoose');
 const path = require('path');
+const swaggerUi = require('swagger-ui-express');
 
 const config = require('./config');
 const moviesApi = require('./routes/movies');
@@ -34,6 +37,15 @@ if (config.env !== 'test') {
 }
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
+
+// Parse the OpenAPI document.
+const openApiDocument = yaml.safeLoad(fs.readFileSync('./swagger.yml'));
+// Update the first server's URL to this application's.
+openApiDocument.servers[0].url = `${config.baseUrl}/api`;
+// Server the Swagger UI documentation.
+app.use('/swagger', swaggerUi.serve, swaggerUi.setup(openApiDocument));
+
+// Serve the apiDoc documentation on /.
 app.use(express.static(path.join(__dirname, 'docs')));
 
 // REST API routes

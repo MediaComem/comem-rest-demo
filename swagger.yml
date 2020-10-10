@@ -1,0 +1,179 @@
+openapi: "3.0.3"
+
+info:
+  title: REST Demo
+  description: >-
+    This API allows you to manipulate People and Movies.
+    A Movie has one director (a Person).
+  version: 1.0.0
+  contact:
+    url: https://github.com/MediaComem/comem-rest-demo
+
+servers:
+  - url: https://comem-rest-demo.herokuapp.com/api
+
+paths:
+  /people:
+    get:
+      summary: List people.
+      parameters:
+        - $ref: '#/components/parameters/page'
+        - $ref: '#/components/parameters/pageSize'
+      responses:
+        200:
+          headers:
+            Link:
+              $ref: '#/components/headers/PaginationLink'
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Person'
+    post:
+      summary: Create a person.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PersonInRequestBody'
+      responses:
+        201:
+          description: The person was successfully created.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Person'
+        422:
+          $ref: '#/components/responses/PersonValidationError'
+
+components:
+  headers:
+    PaginationLink:
+      description: Links to the first, previous, next and last pages of the collection (if applicable).
+      schema:
+        type: string
+      example: >-
+        <https://comem-rest-demo.herokuapp.com/api/people?page=1&pageSize=50>; rel="first prev"
+  parameters:
+    page:
+      name: page
+      in: query
+      schema:
+        type: integer
+        min: 1
+      example: 1
+    pageSize:
+      name: pageSize
+      in: query
+      schema:
+        type: integer
+        min: 1
+        max: 100
+      example: 25
+  responses:
+    PersonNotFoundError:
+      description: The person does not exist.
+      content:
+        text/plain: No person found with ID 58b2926f5e1def0123e97bc0.
+    PersonValidationError:
+      description: The person is invalid.
+      content:
+        application/json:
+          example: |-
+            {
+              "message": "Person validation failed",
+              "errors": {
+                "gender": {
+                  "kind": "enum",
+                  "message": "`foo` is not a valid enum value for path `gender`.",
+                  "name": "ValidatorError",
+                  "path": "gender",
+                  "properties": {
+                    "enumValues": [
+                      "male",
+                      "female",
+                      "other"
+                    ],
+                    "message": "`{VALUE}` is not a valid enum value for path `{PATH}`.",
+                    "path": "gender",
+                    "type": "enum",
+                    "value": "foo"
+                  },
+                  "value": "foo"
+                }
+              }
+            }
+  schemas:
+    Person:
+      type: object
+      properties:
+        id:
+          type: string
+          description: The unique identifier of the person.
+        name:
+          type: string
+          description: The name of the person (must be unique).
+          minlength: 3
+          maxlength: 30
+          example: John Doe
+        gender:
+          type: string
+          description: The gender of the person.
+          enum:
+            - male
+            - female
+            - other
+          example: male
+        birthDate:
+          type: string
+          description: >-
+            The birth date of the person
+            ([ISO-8601](https://en.wikipedia.org/wiki/ISO_8601) format).
+          format: date-time
+          example: '2001-02-03T08:30:00.000Z'
+        createdAt:
+          type: string
+          description: The date at which the person was registered.
+          format: date-time
+          example: '2020-01-02T10:00:00.000Z'
+        directedMovies:
+          type: integer
+          description: The number of movies the person directed.
+          min: 0
+          example: 2
+      required:
+        - id
+        - name
+        - gender
+        - createdAt
+        - directedMovies
+      additionalProperties: false
+    PersonInRequestBody:
+      type: object
+      properties:
+        name:
+          type: string
+          description: The name of the person (must be unique).
+          minlength: 3
+          maxlength: 30
+          example: John Doe
+        gender:
+          type: string
+          description: The gender of the person.
+          enum:
+            - male
+            - female
+            - other
+          example: male
+        birthDate:
+          type: string
+          description: >-
+            The birth date of the person
+            ([ISO-8601](https://en.wikipedia.org/wiki/ISO_8601) format).
+          format: date-time
+          example: '2001-02-03T08:30:00.000Z'
+      required:
+        - name
+        - gender
+      additionalProperties: false

@@ -4,6 +4,7 @@
     "bin/www",
     "models/**/*.js",
     "routes/**/*.js",
+    "swagger.yml",
     "unrest/**/*.js"
   ]
 }

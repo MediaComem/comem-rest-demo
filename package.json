@@ -18,9 +18,11 @@
     "debug": "~4.1.1",
     "express": "~4.17.1",
     "format-link-header": "^3.1.0",
+    "js-yaml": "^3.14.0",
     "mongoose": "^5.10.4",
     "morgan": "~1.10.0",
-    "pug": "^3.0.0"
+    "pug": "^3.0.0",
+    "swagger-ui-express": "^4.1.4"
   },
   "devDependencies": {
     "apidoc": "^0.25.0",
