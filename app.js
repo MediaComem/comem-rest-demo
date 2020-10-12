@@ -39,7 +39,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
 // Parse the OpenAPI document.
-const openApiDocument = yaml.safeLoad(fs.readFileSync('./swagger.yml'));
+const openApiDocument = yaml.safeLoad(fs.readFileSync('./openapi.yml'));
 // Update the first server's URL to this application's.
 openApiDocument.servers[0].url = `${config.baseUrl}/api`;
 // Server the Swagger UI documentation.
