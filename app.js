@@ -14,12 +14,7 @@ const adminRoutes = require('./routes/admin');
 const unrestRoutes = require('./unrest/routes');
 
 // Connect to the database (can be overriden from environment)
-mongoose.Promise = Promise;
-mongoose.connect(config.databaseUrl, {
-  useCreateIndex: true,
-  useNewUrlParser: true,
-  useUnifiedTopology: true
-});
+mongoose.connect(config.databaseUrl);
 
 const app = express();
 
@@ -39,7 +34,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
 // Parse the OpenAPI document.
-const openApiDocument = yaml.safeLoad(fs.readFileSync('./openapi.yml'));
+const openApiDocument = yaml.load(fs.readFileSync('./openapi.yml'));
 // Update the first server's URL to this application's.
 openApiDocument.servers[0].url = `${config.baseUrl}/api`;
 // Server the Swagger UI documentation.
@@ -55,15 +50,14 @@ app.use('/admin', adminRoutes);
 app.use('/unrest', unrestRoutes);
 
 // Catch 404 and forward to error handler
-app.use(function(req, res, next) {
+app.use(function (req, res, next) {
   const err = new Error('Not Found');
   err.status = 404;
   next(err);
 });
 
 // API error handler (responds with JSON)
-app.use('/api', function(err, req, res, next) {
-
+app.use('/api', function (err, req, res, next) {
   // Log the error on stderr
   console.warn(err);
 
@@ -90,8 +84,7 @@ app.use('/api', function(err, req, res, next) {
 });
 
 // Generic error handler (responds with HTML)
-app.use(function(err, req, res, next) {
-
+app.use(function (err, req, res, next) {
   // Set locals, only providing error in development
   res.locals.message = err.message;
   res.locals.error = req.app.get('env') === 'development' ? err : {};

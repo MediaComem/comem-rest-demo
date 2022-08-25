@@ -1,0 +1,5 @@
+# https://prettier.io/docs/en/ignore.html
+/.nyc_output
+/coverage
+/docs
+/node_modules

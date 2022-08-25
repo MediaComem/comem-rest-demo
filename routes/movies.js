@@ -44,7 +44,6 @@ const router = express.Router();
  *     }
  */
 router.post('/', utils.requireJson, function (req, res, next) {
-
   // BUGFIX: validate ObjectId reference before attempting to save. This is to
   // avoid a Mongoose issue where casting fails before custom validation can be
   // applied: https://github.com/Automattic/mongoose/issues/8300
@@ -117,7 +116,6 @@ router.post('/', utils.requireJson, function (req, res, next) {
  *     ]
  */
 router.get('/', function (req, res, next) {
-
   // Count total movies matching the URL query parameters
   const countQuery = queryMovies(req);
   countQuery.count(function (err, total) {
@@ -219,7 +217,6 @@ router.get('/:id', loadMovieFromParamsMiddleware, function (req, res, next) {
  *     }
  */
 router.patch('/:id', utils.requireJson, loadMovieFromParamsMiddleware, function (req, res, next) {
-
   // Update only properties present in the request body
   if (req.body.title !== undefined) {
     req.movie.title = req.body.title;
@@ -275,7 +272,6 @@ router.patch('/:id', utils.requireJson, loadMovieFromParamsMiddleware, function 
  *     }
  */
 router.put('/:id', utils.requireJson, loadMovieFromParamsMiddleware, function (req, res, next) {
-
   // Update all properties (regardless of whether the are present in the request body or not)
   req.movie.title = req.body.title;
   req.movie.rating = req.body.rating;
@@ -321,7 +317,6 @@ router.delete('/:id', loadMovieFromParamsMiddleware, function (req, res, next) {
  * Returns a Mongoose query that will retrieve movies filtered with the URL query parameters.
  */
 function queryMovies(req) {
-
   let query = Movie.find();
 
   if (Array.isArray(req.query.directorId)) {
@@ -351,13 +346,12 @@ function queryMovies(req) {
  * Responds with 404 Not Found if the ID is not valid or the movie doesn't exist.
  */
 function loadMovieFromParamsMiddleware(req, res, next) {
-
   const movieId = req.params.id;
   if (!ObjectId.isValid(movieId)) {
     return movieNotFound(res, movieId);
   }
 
-  let query = Movie.findById(movieId)
+  let query = Movie.findById(movieId);
   // Populate the director if indicated in the "include" URL query parameter
   if (utils.responseShouldInclude(req, 'director')) {
     query = query.populate('directorId');

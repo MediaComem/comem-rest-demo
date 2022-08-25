@@ -59,13 +59,17 @@ function validateDirector(value) {
     throw new Error('person not found');
   }
 
-  return mongoose.model('Person').findOne({ _id: ObjectId(value) }).exec().then(person => {
-    if (!person) {
-      throw new Error('person not found');
-    }
+  return mongoose
+    .model('Person')
+    .findOne({ _id: ObjectId(value) })
+    .exec()
+    .then(person => {
+      if (!person) {
+        throw new Error('person not found');
+      }
 
-    return true;
-  });
+      return true;
+    });
 }
 
 /**
@@ -74,9 +78,13 @@ function validateDirector(value) {
  */
 function validateMovieTitleUniqueness(value) {
   const MovieModel = mongoose.model('Movie', movieSchema);
-  return MovieModel.findOne().where('title').equals(value).exec().then( (existingMovie) => {
-    return !existingMovie || existingMovie._id.equals(this._id)
-  });
+  return MovieModel.findOne()
+    .where('title')
+    .equals(value)
+    .exec()
+    .then(existingMovie => {
+      return !existingMovie || existingMovie._id.equals(this._id);
+    });
 }
 
 /**
@@ -84,7 +92,6 @@ function validateMovieTitleUniqueness(value) {
  * and includes the director's data if it has been populated.
  */
 function transformJsonMovie(doc, json, options) {
-
   // Remove MongoDB _id & __v (there's a default virtual "id" property)
   delete json._id;
   delete json.__v;

@@ -9,7 +9,6 @@ A demonstration RESTful API implemented with [Express][express].
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
-
 - [Requirements](#requirements)
 - [Usage](#usage)
 - [Configuration](#configuration)
@@ -18,14 +17,10 @@ A demonstration RESTful API implemented with [Express][express].
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-
-
 ## Requirements
 
-* [Node.js][node] 14.x
-* [MongoDB][mongo] 4.x
-
-
+- [Node.js][node] 14.x
+- [MongoDB][mongo] 4.x
 
 ## Usage
 
@@ -46,8 +41,6 @@ Visit [http://localhost:3000](http://localhost:3000).
 To automatically reload the code and re-generate the API documentation on
 changes, use `npm run dev` instead of `npm start`.
 
-
-
 ## Configuration
 
 The application will attempt to connect to the MongoDB database at
@@ -56,16 +49,12 @@ The application will attempt to connect to the MongoDB database at
 Use the `$DATABASE_URL` or the `$MONGODB_URI` environment variables to specify a
 different connection URL.
 
-
-
 ## API Resources
 
 This API allows you to work with **Movies** and **People**. A Movie MUST have
 one **director** (who is a Person).
 
 Read the [full documentation][docs] to know more.
-
-
 
 ## Automated tests
 
@@ -76,8 +65,6 @@ It will attempt to connect to the MongoDB database at
 
 The tests are implemented with [Mocha][mocha], [Chai][chai] and
 [SuperTest][supertest].
-
-
 
 [chai]: https://www.chaijs.com
 [docs]: https://mediacomem.github.io/comem-rest-demo/

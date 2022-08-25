@@ -1,4 +1,4 @@
-openapi: "3.0.3"
+openapi: '3.0.3'
 
 info:
   title: REST Demo
@@ -21,6 +21,7 @@ paths:
         - $ref: '#/components/parameters/pageSize'
       responses:
         200:
+          description: The list was successfully retrieved.
           headers:
             Link:
               $ref: '#/components/headers/PaginationLink'
@@ -75,7 +76,8 @@ components:
     PersonNotFoundError:
       description: The person does not exist.
       content:
-        text/plain: No person found with ID 58b2926f5e1def0123e97bc0.
+        text/plain:
+          example: No person found with ID 58b2926f5e1def0123e97bc0.
     PersonValidationError:
       description: The person is invalid.
       content:

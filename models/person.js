@@ -15,11 +15,12 @@ const personSchema = new Schema({
     validate:
       // Manually validate uniqueness to send a "pretty" validation error
       // rather than a MongoDB duplicate key error
-      [{
-        validator: validatePersonNameUniqueness,
-        message:'Person {VALUE} already exists'
-      }],
-
+      [
+        {
+          validator: validatePersonNameUniqueness,
+          message: 'Person {VALUE} already exists'
+        }
+      ]
   },
   gender: {
     type: String,
@@ -46,16 +47,20 @@ personSchema.set('toJSON', {
  * (or the only person that exists is the same as the person being validated).
  */
 function validatePersonNameUniqueness(value) {
-  return this.constructor.findOne().where('name').equals(value).exec().then((existingPerson) => {
-    return !existingPerson || existingPerson._id.equals(this._id);
-  });
+  return this.constructor
+    .findOne()
+    .where('name')
+    .equals(value)
+    .exec()
+    .then(existingPerson => {
+      return !existingPerson || existingPerson._id.equals(this._id);
+    });
 }
 
 /**
  * Removes extra MongoDB properties from serialized people.
  */
 function transformJsonPerson(doc, json, options) {
-
   // Remove MongoDB _id & __v (there's a default virtual "id" property)
   delete json._id;
   delete json.__v;

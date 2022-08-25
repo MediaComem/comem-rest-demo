@@ -5,8 +5,10 @@ const utils = require('./utils');
 
 const router = express.Router();
 
-router.post('/reset', utils.authenticate, function(req, res, next) {
-  removeAll().then(() => res.sendStatus(204)).catch(next);
+router.post('/reset', utils.authenticate, function (req, res, next) {
+  removeAll()
+    .then(() => res.sendStatus(204))
+    .catch(next);
 });
 
 function removeAll() {

@@ -774,7 +774,8 @@
             "type": "String",
             "allowedValues": [
               "\"male\"",
-              "\"female\""
+              "\"female\"",
+              "\"other\""
             ],
             "optional": false,
             "field": "gender",
@@ -805,7 +806,7 @@
       "examples": [
         {
           "title": "422 Unprocessable Entity",
-          "content": "HTTP/1.1 422 Unprocessable Entity\nContent-Type: application/json\n\n{\n  \"message\": \"Person validation failed\",\n  \"errors\": {\n    \"gender\": {\n      \"kind\": \"enum\",\n      \"message\": \"`foo` is not a valid enum value for path `gender`.\",\n      \"name\": \"ValidatorError\",\n      \"path\": \"gender\",\n      \"properties\": {\n        \"enumValues\": [\n          \"male\",\n          \"female\"\n        ],\n        \"message\": \"`{VALUE}` is not a valid enum value for path `{PATH}`.\",\n        \"path\": \"gender\",\n        \"type\": \"enum\",\n        \"value\": \"foo\"\n      },\n      \"value\": \"foo\"\n    }\n  }\n}",
+          "content": "HTTP/1.1 422 Unprocessable Entity\nContent-Type: application/json\n\n{\n  \"message\": \"Person validation failed\",\n  \"errors\": {\n    \"gender\": {\n      \"kind\": \"enum\",\n      \"message\": \"`foo` is not a valid enum value for path `gender`.\",\n      \"name\": \"ValidatorError\",\n      \"path\": \"gender\",\n      \"properties\": {\n        \"enumValues\": [\n          \"male\",\n          \"female\",\n          \"other\"\n        ],\n        \"message\": \"`{VALUE}` is not a valid enum value for path `{PATH}`.\",\n        \"path\": \"gender\",\n        \"type\": \"enum\",\n        \"value\": \"foo\"\n      },\n      \"value\": \"foo\"\n    }\n  }\n}",
           "type": "json"
         }
       ]
@@ -968,7 +969,8 @@
             "type": "String",
             "allowedValues": [
               "\"male\"",
-              "\"female\""
+              "\"female\"",
+              "\"other\""
             ],
             "optional": false,
             "field": "gender",
@@ -1011,7 +1013,7 @@
         },
         {
           "title": "422 Unprocessable Entity",
-          "content": "HTTP/1.1 422 Unprocessable Entity\nContent-Type: application/json\n\n{\n  \"message\": \"Person validation failed\",\n  \"errors\": {\n    \"gender\": {\n      \"kind\": \"enum\",\n      \"message\": \"`foo` is not a valid enum value for path `gender`.\",\n      \"name\": \"ValidatorError\",\n      \"path\": \"gender\",\n      \"properties\": {\n        \"enumValues\": [\n          \"male\",\n          \"female\"\n        ],\n        \"message\": \"`{VALUE}` is not a valid enum value for path `{PATH}`.\",\n        \"path\": \"gender\",\n        \"type\": \"enum\",\n        \"value\": \"foo\"\n      },\n      \"value\": \"foo\"\n    }\n  }\n}",
+          "content": "HTTP/1.1 422 Unprocessable Entity\nContent-Type: application/json\n\n{\n  \"message\": \"Person validation failed\",\n  \"errors\": {\n    \"gender\": {\n      \"kind\": \"enum\",\n      \"message\": \"`foo` is not a valid enum value for path `gender`.\",\n      \"name\": \"ValidatorError\",\n      \"path\": \"gender\",\n      \"properties\": {\n        \"enumValues\": [\n          \"male\",\n          \"female\",\n          \"other\"\n        ],\n        \"message\": \"`{VALUE}` is not a valid enum value for path `{PATH}`.\",\n        \"path\": \"gender\",\n        \"type\": \"enum\",\n        \"value\": \"foo\"\n      },\n      \"value\": \"foo\"\n    }\n  }\n}",
           "type": "json"
         }
       ]
@@ -1331,7 +1333,8 @@
             "type": "String",
             "allowedValues": [
               "\"male\"",
-              "\"female\""
+              "\"female\"",
+              "\"other\""
             ],
             "optional": false,
             "field": "gender",
@@ -1374,7 +1377,7 @@
         },
         {
           "title": "422 Unprocessable Entity",
-          "content": "HTTP/1.1 422 Unprocessable Entity\nContent-Type: application/json\n\n{\n  \"message\": \"Person validation failed\",\n  \"errors\": {\n    \"gender\": {\n      \"kind\": \"enum\",\n      \"message\": \"`foo` is not a valid enum value for path `gender`.\",\n      \"name\": \"ValidatorError\",\n      \"path\": \"gender\",\n      \"properties\": {\n        \"enumValues\": [\n          \"male\",\n          \"female\"\n        ],\n        \"message\": \"`{VALUE}` is not a valid enum value for path `{PATH}`.\",\n        \"path\": \"gender\",\n        \"type\": \"enum\",\n        \"value\": \"foo\"\n      },\n      \"value\": \"foo\"\n    }\n  }\n}",
+          "content": "HTTP/1.1 422 Unprocessable Entity\nContent-Type: application/json\n\n{\n  \"message\": \"Person validation failed\",\n  \"errors\": {\n    \"gender\": {\n      \"kind\": \"enum\",\n      \"message\": \"`foo` is not a valid enum value for path `gender`.\",\n      \"name\": \"ValidatorError\",\n      \"path\": \"gender\",\n      \"properties\": {\n        \"enumValues\": [\n          \"male\",\n          \"female\",\n          \"other\"\n        ],\n        \"message\": \"`{VALUE}` is not a valid enum value for path `{PATH}`.\",\n        \"path\": \"gender\",\n        \"type\": \"enum\",\n        \"value\": \"foo\"\n      },\n      \"value\": \"foo\"\n    }\n  }\n}",
           "type": "json"
         }
       ]

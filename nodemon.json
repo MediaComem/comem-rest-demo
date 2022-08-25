@@ -3,8 +3,8 @@
     "app.js",
     "bin/www",
     "models/**/*.js",
+    "openapi.yml",
     "routes/**/*.js",
-    "swagger.yml",
     "unrest/**/*.js"
   ]
 }

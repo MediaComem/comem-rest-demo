@@ -15,9 +15,15 @@ const people = [
 const router = express.Router();
 
 router.get('/people', (req, res) => res.send(people));
-router.get('/people/byAge/:age', (req, res) => res.send(people.filter(person => person.age === parseInt(req.params.age, 10))));
-router.get('/people/byFirstName/:firstName', (req, res) => res.send(people.filter(person => person.firstName === req.params.firstName)));
-router.get('/people/byLastName/:lastName', (req, res) => res.send(people.filter(person => person.lastName === req.params.lastName)));
+router.get('/people/byAge/:age', (req, res) =>
+  res.send(people.filter(person => person.age === parseInt(req.params.age, 10)))
+);
+router.get('/people/byFirstName/:firstName', (req, res) =>
+  res.send(people.filter(person => person.firstName === req.params.firstName))
+);
+router.get('/people/byLastName/:lastName', (req, res) =>
+  res.send(people.filter(person => person.lastName === req.params.lastName))
+);
 
 router.post('/people/create', (req, res) => {
   res.send({
@@ -27,7 +33,6 @@ router.post('/people/create', (req, res) => {
 });
 
 router.get('/person/:id', (req, res) => {
-
   const person = people.find(p => p.id === parseInt(req.params.id, 10));
   if (!person) {
     return res.status(404).send(`No person found with ID ${req.params.id}`);
@@ -39,7 +44,7 @@ router.get('/person/:id', (req, res) => {
   }
 
   res.send(person);
-})
+});
 
 router.post('/things', (req, res) => {
   if (typeof req.body !== 'object' || req.body === null || Array.isArray(req.body)) {

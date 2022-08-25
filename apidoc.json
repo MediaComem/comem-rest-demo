@@ -3,7 +3,7 @@
   "version": "1.1.0",
   "description": "A demonstration REST API developed with Express",
   "title": "Express REST Demo",
-  "url" : "https://comem-rest-demo.herokuapp.com",
+  "url": "https://comem-rest-demo.herokuapp.com",
   "header": {
     "filename": "APIDOC.md"
   }
