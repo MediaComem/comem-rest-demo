@@ -6,7 +6,6 @@
   "scripts": {
     "apidoc": "apidoc -i routes -o docs",
     "apidoc:watch": "onchange APIDOC.md routes/**/*.js -- npm run apidoc",
-    "coveralls": "cat ./coverage/lcov.info | coveralls",
     "dev": "concurrently \"npm run nodemon\" \"npm run apidoc:watch\"",
     "doctoc": "doctoc --github --notitle README.md",
     "format": "prettier --config ./.prettierrc.yml --check .",
@@ -32,7 +31,6 @@
     "apidoc": "^0.52.0",
     "chai": "^4.3.6",
     "concurrently": "^7.3.0",
-    "coveralls": "^3.1.1",
     "cross-env": "^7.0.3",
     "doctoc": "^2.2.0",
     "mocha": "^10.0.0",
