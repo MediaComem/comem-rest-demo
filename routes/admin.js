@@ -1,7 +1,8 @@
-const express = require('express');
-const Movie = require('../models/movie');
-const Person = require('../models/person');
-const utils = require('./utils');
+import express from 'express';
+
+import Movie from '../models/movie.js';
+import Person from '../models/person.js';
+import * as utils from './utils.js';
 
 const router = express.Router();
 
@@ -15,4 +16,4 @@ function removeAll() {
   return Movie.remove({}).then(() => Person.remove({}));
 }
 
-module.exports = router;
+export default router;

@@ -1,4 +1,5 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
+
 const ObjectId = mongoose.Types.ObjectId;
 const Schema = mongoose.Schema;
 
@@ -105,4 +106,4 @@ function transformJsonMovie(doc, json, options) {
   return json;
 }
 
-module.exports = mongoose.model('Movie', movieSchema);
+export default mongoose.model('Movie', movieSchema);

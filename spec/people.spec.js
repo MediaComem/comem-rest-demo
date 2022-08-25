@@ -1,12 +1,12 @@
-const { expect } = require('chai');
-const mongoose = require('mongoose');
-const supertest = require('supertest');
+import { expect } from 'chai';
+import mongoose from 'mongoose';
+import supertest from 'supertest';
 
-const app = require('../app');
-const { baseUrl } = require('../config');
-const Movie = require('../models/movie');
-const Person = require('../models/person');
-const { cleanUpDatabase } = require('./utils');
+import app from '../app.js';
+import { baseUrl } from '../config.js';
+import Movie from '../models/movie.js';
+import Person from '../models/person.js';
+import { cleanUpDatabase } from './utils.js';
 
 // Clean up leftover data in the database before each test in this block.
 beforeEach(cleanUpDatabase);

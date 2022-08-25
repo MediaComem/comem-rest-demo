@@ -1,10 +1,11 @@
-const { authToken, baseUrl } = require('../config');
-const formatLinkHeader = require('format-link-header');
+import formatLinkHeader from 'format-link-header';
+
+import { authToken, baseUrl } from '../config.js';
 
 /**
  * Responds with 415 Unsupported Media Type if the request does not have the Content-Type application/json.
  */
-exports.requireJson = function (req, res, next) {
+export function requireJson(req, res, next) {
   if (req.is('application/json')) {
     return next();
   }
@@ -12,7 +13,7 @@ exports.requireJson = function (req, res, next) {
   const error = new Error('This resource only has an application/json representation');
   error.status = 415; // 415 Unsupported Media Type
   next(error);
-};
+}
 
 /**
  * Parses the pagination parameters (i.e. page & page size) from the request.
@@ -20,7 +21,7 @@ exports.requireJson = function (req, res, next) {
  * @param {ExpressRequest} req - The Express request object
  * @returns An object with "page" and "pageSize" properties
  */
-exports.getPaginationParameters = function (req) {
+export function getPaginationParameters(req) {
   // Parse the "page" URL query parameter indicating the index of the first element that should be in the response
   let page = parseInt(req.query.page, 10);
   if (isNaN(page) || page < 1) {
@@ -34,7 +35,7 @@ exports.getPaginationParameters = function (req) {
   }
 
   return { page, pageSize };
-};
+}
 
 /**
  * Adds a Link header to the response (if applicable).
@@ -45,7 +46,7 @@ exports.getPaginationParameters = function (req) {
  * @param {Number} total - The total number of elements
  * @param {ExpressResponse} res - The Exprss response object
  */
-exports.addLinkHeader = function (resourceHref, page, pageSize, total, res) {
+export function addLinkHeader(resourceHref, page, pageSize, total, res) {
   const links = {};
   const url = baseUrl + resourceHref;
   const maxPage = Math.ceil(total / pageSize);
@@ -67,12 +68,12 @@ exports.addLinkHeader = function (resourceHref, page, pageSize, total, res) {
   if (Object.keys(links).length >= 1) {
     res.set('Link', formatLinkHeader(links));
   }
-};
+}
 
 /**
  * Returns true if the specified property is among the "include" URL query parameters sent by the client
  */
-exports.responseShouldInclude = function (req, property) {
+export function responseShouldInclude(req, property) {
   // Get the "include" URL query parameter
   let propertiesToInclude = req.query.include;
   if (!propertiesToInclude) {
@@ -86,13 +87,13 @@ exports.responseShouldInclude = function (req, property) {
 
   // Check whether the property is inside the array
   return propertiesToInclude.indexOf(property) >= 0;
-};
+}
 
 /**
  * Middleware that responds with 401 Unauthorized if the client did not sent a bearer authentication token
  * equal to the $AUTH_TOKEN environment variable.
  */
-exports.authenticate = function (req, res, next) {
+export function authenticate(req, res, next) {
   if (!authToken) {
     return res.sendStatus(401);
   }
@@ -112,7 +113,7 @@ exports.authenticate = function (req, res, next) {
   }
 
   next();
-};
+}
 
 /**
  * @apiDefine Pagination

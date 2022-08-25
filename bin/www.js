@@ -1,10 +1,12 @@
 #!/usr/bin/env node
 
-// Module dependencies
-const app = require('../app');
-const config = require('../config');
-const debug = require('debug')('demo:server');
-const http = require('http');
+import debugFactory from 'debug';
+import http from 'http';
+
+import app from '../app.js';
+import * as config from '../config.js';
+
+const debug = debugFactory('demo:server');
 
 // Get port from environment and store in Express
 const port = normalizePort(config.port);
@@ -22,16 +24,16 @@ server.on('listening', onListening);
  * Normalize a port into a number, string, or false.
  */
 function normalizePort(val) {
-  const port = parseInt(val, 10);
+  const parsedPort = parseInt(val, 10);
 
-  if (isNaN(port)) {
+  if (isNaN(parsedPort)) {
     // named pipe
     return val;
   }
 
-  if (port >= 0) {
+  if (parsedPort >= 0) {
     // port number
-    return port;
+    return parsedPort;
   }
 
   return false;
@@ -52,11 +54,9 @@ function onError(error) {
     case 'EACCES':
       console.error(bind + ' requires elevated privileges');
       process.exit(1);
-      break;
     case 'EADDRINUSE':
       console.error(bind + ' is already in use');
       process.exit(1);
-      break;
     default:
       throw error;
   }

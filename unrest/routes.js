@@ -1,4 +1,4 @@
-const express = require('express');
+import express from 'express';
 
 const people = [
   { id: 2, firstName: 'Lorna', lastName: 'Cole', age: 35 },
@@ -61,4 +61,4 @@ router.post('/things', (req, res) => {
   });
 });
 
-module.exports = router;
+export default router;

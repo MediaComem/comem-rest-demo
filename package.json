@@ -2,6 +2,7 @@
   "name": "comem-rest-demo",
   "version": "1.0.0",
   "private": true,
+  "type": "module",
   "scripts": {
     "apidoc": "apidoc -i routes -o docs",
     "apidoc:watch": "onchange APIDOC.md routes/**/*.js -- npm run apidoc",
@@ -11,8 +12,8 @@
     "format": "prettier --config ./.prettierrc.yml --check .",
     "format:write": "prettier --config ./.prettierrc.yml --write .",
     "nodemon": "DEBUG=demo:* AUTH_TOKEN=secret nodemon",
-    "start": "node ./bin/www",
-    "test": "cross-env NODE_ENV=test nyc mocha",
+    "start": "node ./bin/www.js",
+    "test": "cross-env NODE_ENV=test 'NODE_OPTIONS=--experimental-loader @istanbuljs/esm-loader-hook' nyc mocha",
     "test:ci": "cross-env NODE_ENV=test nyc mocha --forbid-only"
   },
   "dependencies": {
@@ -27,6 +28,7 @@
     "swagger-ui-express": "^4.5.0"
   },
   "devDependencies": {
+    "@istanbuljs/esm-loader-hook": "^0.2.0",
     "apidoc": "^0.52.0",
     "chai": "^4.3.6",
     "concurrently": "^7.3.0",

@@ -1,5 +1,5 @@
-const mongoose = require('mongoose');
-const ObjectId = mongoose.Types.ObjectId;
+import mongoose from 'mongoose';
+
 const Schema = mongoose.Schema;
 
 /**
@@ -68,4 +68,4 @@ function transformJsonPerson(doc, json, options) {
   return json;
 }
 
-module.exports = mongoose.model('Person', personSchema);
+export default mongoose.model('Person', personSchema);

@@ -1,6 +1,6 @@
-const Movie = require('../models/movie');
-const Person = require('../models/person');
+import Movie from '../models/movie.js';
+import Person from '../models/person.js';
 
-exports.cleanUpDatabase = async function () {
+export async function cleanUpDatabase() {
   await Promise.all([Movie.deleteMany().exec(), Person.deleteMany().exec()]);
-};
+}

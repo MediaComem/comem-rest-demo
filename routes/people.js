@@ -1,11 +1,14 @@
-const config = require('../config');
-const debug = require('debug')('demo:people');
-const express = require('express');
-const mongoose = require('mongoose');
+import debugFactory from 'debug';
+import express from 'express';
+import mongoose from 'mongoose';
+
+import * as config from '../config.js';
+import Movie from '../models/movie.js';
+import Person from '../models/person.js';
+import * as utils from './utils.js';
+
+const debug = debugFactory('demo:people');
 const ObjectId = mongoose.Types.ObjectId;
-const Movie = require('../models/movie');
-const Person = require('../models/person');
-const utils = require('./utils');
 
 const router = express.Router();
 
@@ -494,4 +497,4 @@ function countMoviesDirectedBy(person, callback) {
  *     }
  */
 
-module.exports = router;
+export default router;

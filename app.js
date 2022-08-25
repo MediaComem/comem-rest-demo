@@ -1,17 +1,17 @@
-const bodyParser = require('body-parser');
-const express = require('express');
-const fs = require('fs');
-const yaml = require('js-yaml');
-const logger = require('morgan');
-const mongoose = require('mongoose');
-const path = require('path');
-const swaggerUi = require('swagger-ui-express');
+import bodyParser from 'body-parser';
+import express from 'express';
+import fs from 'fs';
+import yaml from 'js-yaml';
+import logger from 'morgan';
+import mongoose from 'mongoose';
+import path from 'path';
+import swaggerUi from 'swagger-ui-express';
 
-const config = require('./config');
-const moviesApi = require('./routes/movies');
-const peopleApi = require('./routes/people');
-const adminRoutes = require('./routes/admin');
-const unrestRoutes = require('./unrest/routes');
+import * as config from './config.js';
+import moviesApi from './routes/movies.js';
+import peopleApi from './routes/people.js';
+import adminRoutes from './routes/admin.js';
+import unrestRoutes from './unrest/routes.js';
 
 // Connect to the database (can be overriden from environment)
 mongoose.connect(config.databaseUrl);
@@ -23,7 +23,7 @@ if (config.debug) {
 }
 
 // View engine setup
-app.set('views', path.join(__dirname, 'views'));
+app.set('views', path.join(config.projectRoot, 'views'));
 app.set('view engine', 'pug');
 
 // General middlewares
@@ -41,7 +41,7 @@ openApiDocument.servers[0].url = `${config.baseUrl}/api`;
 app.use('/swagger', swaggerUi.serve, swaggerUi.setup(openApiDocument));
 
 // Serve the apiDoc documentation on /.
-app.use(express.static(path.join(__dirname, 'docs')));
+app.use(express.static(path.join(config.projectRoot, 'docs')));
 
 // REST API routes
 app.use('/api/movies', moviesApi);
@@ -94,4 +94,4 @@ app.use(function (err, req, res, next) {
   res.render('error');
 });
 
-module.exports = app;
+export default app;

@@ -1,10 +1,13 @@
-const config = require('../config');
-const debug = require('debug')('demo:movies');
-const express = require('express');
-const mongoose = require('mongoose');
-const Movie = require('../models/movie');
+import debugFactory from 'debug';
+import express from 'express';
+import mongoose from 'mongoose';
+
+import * as config from '../config.js';
+import Movie from '../models/movie.js';
+import * as utils from './utils.js';
+
+const debug = debugFactory('demo:movies');
 const ObjectId = mongoose.Types.ObjectId;
-const utils = require('./utils');
 
 const router = express.Router();
 
@@ -445,4 +448,4 @@ function movieNotFound(res, movieId) {
  *     }
  */
 
-module.exports = router;
+export default router;
