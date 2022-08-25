@@ -35,7 +35,7 @@ jobs:
 
       - name: Run automated tests & generate code coverage report
         run: |
-          npm run test:ci
+          npm run test
 
       - name: Format code
         run: |

@@ -1,0 +1,14 @@
+{
+  "collectCoverage": true,
+  "collectCoverageFrom": [
+    "app.js",
+    "bin/**/*.js",
+    "config.js",
+    "models/**/*.js",
+    "routes/**/*.js",
+    "tests/**/*.js",
+    "unrest/**/*.js"
+  ],
+  "coverageDirectory": "coverage",
+  "coverageReporters": ["clover", "json", "html", "lcov", "text"]
+}

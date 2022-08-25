@@ -12,8 +12,7 @@
     "format:write": "prettier --config ./.prettierrc.yml --write .",
     "nodemon": "DEBUG=demo:* AUTH_TOKEN=secret nodemon",
     "start": "node ./bin/www.js",
-    "test": "cross-env NODE_ENV=test 'NODE_OPTIONS=--experimental-loader @istanbuljs/esm-loader-hook' nyc mocha",
-    "test:ci": "cross-env NODE_ENV=test nyc mocha --forbid-only"
+    "test": "cross-env NODE_ENV=test NODE_OPTIONS=--experimental-vm-modules jest"
   },
   "dependencies": {
     "body-parser": "^1.20.0",
@@ -27,15 +26,12 @@
     "swagger-ui-express": "^4.5.0"
   },
   "devDependencies": {
-    "@istanbuljs/esm-loader-hook": "^0.2.0",
     "apidoc": "^0.52.0",
-    "chai": "^4.3.6",
     "concurrently": "^7.3.0",
     "cross-env": "^7.0.3",
     "doctoc": "^2.2.0",
-    "mocha": "^10.0.0",
+    "jest": "^29.0.0",
     "nodemon": "^2.0.19",
-    "nyc": "^15.1.0",
     "onchange": "^7.1.0",
     "prettier": "^2.7.1",
     "supertest": "^6.2.4"
