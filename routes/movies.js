@@ -36,7 +36,7 @@ const router = express.Router();
  * @apiSuccessExample 201 Created
  *     HTTP/1.1 201 Created
  *     Content-Type: application/json
- *     Location: https://comem-rest-demo.herokuapp.com/api/movies/58b2926f5e1def0123e97281
+ *     Location: https://demo.archioweb.ch/api/movies/58b2926f5e1def0123e97281
  *
  *     {
  *       "id": "58b2926f5e1def0123e97281",
@@ -99,7 +99,7 @@ router.post('/', utils.requireJson, function (req, res, next) {
  * @apiSuccessExample 200 OK
  *     HTTP/1.1 200 OK
  *     Content-Type: application/json
- *     Link: &lt;https://comem-rest-demo.herokuapp.com/api/movies?page=1&pageSize=50&gt;; rel="first prev"
+ *     Link: &lt;https://demo.archioweb.ch/api/movies?page=1&pageSize=50&gt;; rel="first prev"
  *
  *     [
  *       {

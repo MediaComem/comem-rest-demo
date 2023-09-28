@@ -10,7 +10,7 @@ info:
     url: https://github.com/MediaComem/comem-rest-demo
 
 servers:
-  - url: https://comem-rest-demo.herokuapp.com/api
+  - url: https://demo.archioweb.ch/api
 
 paths:
   /people:
@@ -55,7 +55,7 @@ components:
       schema:
         type: string
       example: >-
-        <https://comem-rest-demo.herokuapp.com/api/people?page=1&pageSize=50>; rel="first prev"
+        <https://demo.archioweb.ch/api/people?page=1&pageSize=50>; rel="first prev"
   parameters:
     page:
       name: page
