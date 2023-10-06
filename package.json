@@ -26,7 +26,7 @@
     "swagger-ui-express": "^5.0.0"
   },
   "devDependencies": {
-    "apidoc": "^0.52.0",
+    "apidoc": "^1.2.0",
     "concurrently": "^8.2.1",
     "cross-env": "^7.0.3",
     "doctoc": "^2.2.0",

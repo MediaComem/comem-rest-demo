@@ -422,7 +422,7 @@ function countMoviesDirectedBy(person) {
  * @apiDefine PersonInRequestBody
  * @apiParam (Request body) {String{3..30}} name The name of the person (must be unique)
  * @apiParam (Request body) {String="male","female","other"} gender The gender of the person
- * @apiParam (Request body) {String} [birthDate] The birth date of the person ([ISO-8601](https://en.wikipedia.org/wiki/ISO_8601) format)
+ * @apiParam (Request body) {String} [birthDate] The birth date of the person (https://en.wikipedia.org/wiki/ISO_8601)
  */
 
 /**
