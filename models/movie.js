@@ -34,9 +34,13 @@ const movieSchema = new Schema({
     ref: 'Person',
     default: null,
     required: true,
+    // Disable casting of invalid director IDs to ObjectId, otherwise an invalid
+    // string like "1234" would fail at casting with an obscure error message
+    // and never reach the validator.
+    cast: value => (ObjectId.isValid(value) ? new ObjectId(value) : value),
     validate: {
-      // Validate that the directorId is a valid ObjectId
-      // and references an existing person
+      // Validate that the director ID is a valid ObjectId and references an
+      // existing person.
       validator: validateDirector,
       message: props => props.reason.message
     }
