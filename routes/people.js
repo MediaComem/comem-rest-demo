@@ -207,7 +207,7 @@ router.get('/', (req, res, next) => {
  *       "directedMovies": 3
  *     }
  */
-router.get('/:id', loadPersonFromParamsMiddleware, function (req, res, next) {
+router.get('/:id', loadPersonFromParamsMiddleware, (req, res, next) => {
   countMoviesDirectedBy(req.person)
     .then(directedMovies => {
       res.send({
@@ -254,7 +254,7 @@ router.get('/:id', loadPersonFromParamsMiddleware, function (req, res, next) {
  *       "directedMovies": 3
  *     }
  */
-router.patch('/:id', utils.requireJson, loadPersonFromParamsMiddleware, function (req, res, next) {
+router.patch('/:id', utils.requireJson, loadPersonFromParamsMiddleware, (req, res, next) => {
   // Update properties present in the request body
   if (req.body.name !== undefined) {
     req.person.name = req.body.name;
@@ -312,7 +312,7 @@ router.patch('/:id', utils.requireJson, loadPersonFromParamsMiddleware, function
  *       "directedMovies": 2
  *     }
  */
-router.put('/:id', utils.requireJson, loadPersonFromParamsMiddleware, function (req, res, next) {
+router.put('/:id', utils.requireJson, loadPersonFromParamsMiddleware, (req, res, next) => {
   // Update all properties (regardless of whether they are in the request body or not)
   req.person.name = req.body.name;
   req.person.gender = req.body.gender;
@@ -343,7 +343,7 @@ router.put('/:id', utils.requireJson, loadPersonFromParamsMiddleware, function (
  * @apiSuccessExample 204 No Content
  *     HTTP/1.1 204 No Content
  */
-router.delete('/:id', loadPersonFromParamsMiddleware, function (req, res, next) {
+router.delete('/:id', loadPersonFromParamsMiddleware, (req, res, next) => {
   // Check if a movie exists before deleting
   Movie.findOne({ directorId: req.person._id })
     .exec()
@@ -356,7 +356,7 @@ router.delete('/:id', loadPersonFromParamsMiddleware, function (req, res, next) 
           .send(`Cannot delete person ${req.person.name} because movies are directed by them`);
       }
 
-      return req.person.remove(() => {
+      return req.person.deleteOne().then(() => {
         debug(`Deleted person "${req.person.name}"`);
         res.sendStatus(204);
       });

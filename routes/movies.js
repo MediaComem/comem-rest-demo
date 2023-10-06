@@ -121,7 +121,8 @@ router.get('/', (req, res, next) => {
   // Count total movies matching the URL query parameters
   const countQuery = queryMovies(req);
   countQuery
-    .countDocuments(total => {
+    .countDocuments()
+    .then(total => {
       // Prepare the initial database query from the URL query parameters
       let query = queryMovies(req);
 
@@ -297,7 +298,7 @@ router.put('/:id', utils.requireJson, loadMovieFromParamsMiddleware, (req, res, 
  */
 router.delete('/:id', loadMovieFromParamsMiddleware, (req, res, next) => {
   req.movie
-    .remove()
+    .deleteOne()
     .then(() => {
       debug(`Deleted movie "${req.movie.title}"`);
       res.sendStatus(204);
