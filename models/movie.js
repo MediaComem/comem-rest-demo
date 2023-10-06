@@ -62,7 +62,7 @@ function validateDirector(value) {
 
   return mongoose
     .model('Person')
-    .findOne({ _id: ObjectId(value) })
+    .findOne({ _id: new ObjectId(value) })
     .exec()
     .then(person => {
       if (!person) {

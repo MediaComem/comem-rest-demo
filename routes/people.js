@@ -48,19 +48,18 @@ const router = express.Router();
  *       "directedMovies": 0
  *     }
  */
-router.post('/', utils.requireJson, function (req, res, next) {
-  new Person(req.body).save(function (err, savedPerson) {
-    if (err) {
-      return next(err);
-    }
+router.post('/', utils.requireJson, (req, res, next) => {
+  new Person(req.body)
+    .save()
+    .then(savedPerson => {
+      debug(`Created person "${savedPerson.name}"`);
 
-    debug(`Created person "${savedPerson.name}"`);
-
-    res
-      .status(201)
-      .set('Location', `${config.baseUrl}/api/people/${savedPerson._id}`)
-      .send(savedPerson);
-  });
+      res
+        .status(201)
+        .set('Location', `${config.baseUrl}/api/people/${savedPerson._id}`)
+        .send(savedPerson);
+    })
+    .catch(next);
 });
 
 /**
@@ -102,75 +101,67 @@ router.post('/', utils.requireJson, function (req, res, next) {
  *       }
  *     ]
  */
-router.get('/', function (req, res, next) {
+router.get('/', (req, res, next) => {
   const countQuery = queryPeople(req);
-  countQuery.countDocuments(function (err, total) {
-    if (err) {
-      return next(err);
-    }
-
+  countQuery.countDocuments().then(total => {
     // Parse pagination parameters from URL query parameters.
     const { page, pageSize } = utils.getPaginationParameters(req);
 
-    Person.aggregate(
-      [
-        {
-          $lookup: {
-            from: 'movies',
-            localField: '_id',
-            foreignField: 'directorId',
-            as: 'directedMovies'
-          }
-        },
-        {
-          $unwind: {
-            path: '$directedMovies',
-            // Preserve people who have not directed any movie
-            // ("directedMovies" will be null).
-            preserveNullAndEmptyArrays: true
-          }
-        },
-        // Replace "directedMovies" by 1 when set, or by 0 when null.
-        {
-          $addFields: {
-            directedMovies: {
-              $cond: {
-                if: '$directedMovies',
-                then: 1,
-                else: 0
-              }
+    Person.aggregate([
+      {
+        $lookup: {
+          from: 'movies',
+          localField: '_id',
+          foreignField: 'directorId',
+          as: 'directedMovies'
+        }
+      },
+      {
+        $unwind: {
+          path: '$directedMovies',
+          // Preserve people who have not directed any movie
+          // ("directedMovies" will be null).
+          preserveNullAndEmptyArrays: true
+        }
+      },
+      // Replace "directedMovies" by 1 when set, or by 0 when null.
+      {
+        $addFields: {
+          directedMovies: {
+            $cond: {
+              if: '$directedMovies',
+              then: 1,
+              else: 0
             }
           }
-        },
-        {
-          $group: {
-            _id: '$_id',
-            birthDate: { $first: '$birthDate' },
-            createdAt: { $first: '$createdAt' },
-            // Sum the 1s and 0s in the "directedMovies" property
-            // to obtain the final count.
-            directedMovies: { $sum: '$directedMovies' },
-            gender: { $first: '$gender' },
-            name: { $first: '$name' }
-          }
-        },
-        {
-          $sort: {
-            name: 1
-          }
-        },
-        {
-          $skip: (page - 1) * pageSize
-        },
-        {
-          $limit: pageSize
         }
-      ],
-      (err, people) => {
-        if (err) {
-          return next(err);
+      },
+      {
+        $group: {
+          _id: '$_id',
+          birthDate: { $first: '$birthDate' },
+          createdAt: { $first: '$createdAt' },
+          // Sum the 1s and 0s in the "directedMovies" property
+          // to obtain the final count.
+          directedMovies: { $sum: '$directedMovies' },
+          gender: { $first: '$gender' },
+          name: { $first: '$name' }
         }
-
+      },
+      {
+        $sort: {
+          name: 1
+        }
+      },
+      {
+        $skip: (page - 1) * pageSize
+      },
+      {
+        $limit: pageSize
+      }
+    ])
+      .exec()
+      .then(people => {
         utils.addLinkHeader('/api/people', page, pageSize, total, res);
 
         res.send(
@@ -184,8 +175,8 @@ router.get('/', function (req, res, next) {
             return serialized;
           })
         );
-      }
-    );
+      })
+      .catch(next);
   });
 });
 
@@ -217,16 +208,14 @@ router.get('/', function (req, res, next) {
  *     }
  */
 router.get('/:id', loadPersonFromParamsMiddleware, function (req, res, next) {
-  countMoviesDirectedBy(req.person, function (err, directedMovies) {
-    if (err) {
-      return next(err);
-    }
-
-    res.send({
-      ...req.person.toJSON(),
-      directedMovies
-    });
-  });
+  countMoviesDirectedBy(req.person)
+    .then(directedMovies => {
+      res.send({
+        ...req.person.toJSON(),
+        directedMovies
+      });
+    })
+    .catch(next);
 });
 
 /**
@@ -277,14 +266,13 @@ router.patch('/:id', utils.requireJson, loadPersonFromParamsMiddleware, function
     req.person.birthDate = req.body.birthDate;
   }
 
-  req.person.save(function (err, savedPerson) {
-    if (err) {
-      return next(err);
-    }
-
-    debug(`Updated person "${savedPerson.name}"`);
-    res.send(savedPerson);
-  });
+  req.person
+    .save()
+    .then(savedPerson => {
+      debug(`Updated person "${savedPerson.name}"`);
+      res.send(savedPerson);
+    })
+    .catch(next);
 });
 
 /**
@@ -330,14 +318,13 @@ router.put('/:id', utils.requireJson, loadPersonFromParamsMiddleware, function (
   req.person.gender = req.body.gender;
   req.person.birthDate = req.body.birthDate;
 
-  req.person.save(function (err, savedPerson) {
-    if (err) {
-      return next(err);
-    }
-
-    debug(`Updated person "${savedPerson.name}"`);
-    res.send(savedPerson);
-  });
+  req.person
+    .save()
+    .then(savedPerson => {
+      debug(`Updated person "${savedPerson.name}"`);
+      res.send(savedPerson);
+    })
+    .catch(next);
 });
 
 /**
@@ -358,26 +345,23 @@ router.put('/:id', utils.requireJson, loadPersonFromParamsMiddleware, function (
  */
 router.delete('/:id', loadPersonFromParamsMiddleware, function (req, res, next) {
   // Check if a movie exists before deleting
-  Movie.findOne({ directorId: req.person._id }).exec(function (err, movie) {
-    if (err) {
-      return next(err);
-    } else if (movie) {
-      // Do not delete if any movie is directed by this person
-      return res
-        .status(409)
-        .type('text')
-        .send(`Cannot delete person ${req.person.name} because movies are directed by them`);
-    }
-
-    req.person.remove(function (err) {
-      if (err) {
-        return next(err);
+  Movie.findOne({ directorId: req.person._id })
+    .exec()
+    .then(movie => {
+      if (movie) {
+        // Do not delete if any movie is directed by this person
+        return res
+          .status(409)
+          .type('text')
+          .send(`Cannot delete person ${req.person.name} because movies are directed by them`);
       }
 
-      debug(`Deleted person "${req.person.name}"`);
-      res.sendStatus(204);
-    });
-  });
+      return req.person.remove(() => {
+        debug(`Deleted person "${req.person.name}"`);
+        res.sendStatus(204);
+      });
+    })
+    .catch(next);
 });
 
 /**
@@ -403,16 +387,16 @@ function loadPersonFromParamsMiddleware(req, res, next) {
     return personNotFound(res, personId);
   }
 
-  Person.findById(req.params.id, function (err, person) {
-    if (err) {
-      return next(err);
-    } else if (!person) {
-      return personNotFound(res, personId);
-    }
+  Person.findById(req.params.id)
+    .then(person => {
+      if (!person) {
+        return personNotFound(res, personId);
+      }
 
-    req.person = person;
-    next();
-  });
+      req.person = person;
+      next();
+    })
+    .catch(next);
 }
 
 /**
@@ -425,8 +409,8 @@ function personNotFound(res, personId) {
 /**
  * Given a person, asynchronously returns the number of movies directed by the person.
  */
-function countMoviesDirectedBy(person, callback) {
-  Movie.countDocuments().where('directorId', person._id).exec(callback);
+function countMoviesDirectedBy(person) {
+  return Movie.countDocuments().where('directorId', person._id).exec();
 }
 
 /**

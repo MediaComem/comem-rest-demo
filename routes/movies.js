@@ -46,7 +46,7 @@ const router = express.Router();
  *       "createdAt": "1988-07-12T00:00:00.000Z"
  *     }
  */
-router.post('/', utils.requireJson, function (req, res, next) {
+router.post('/', utils.requireJson, (req, res, next) => {
   // BUGFIX: validate ObjectId reference before attempting to save. This is to
   // avoid a Mongoose issue where casting fails before custom validation can be
   // applied: https://github.com/Automattic/mongoose/issues/8300
@@ -63,18 +63,17 @@ router.post('/', utils.requireJson, function (req, res, next) {
     });
   }
 
-  new Movie(req.body).save(function (err, savedMovie) {
-    if (err) {
-      return next(err);
-    }
+  new Movie(req.body)
+    .save()
+    .then(savedMovie => {
+      debug(`Created movie "${savedMovie.title}"`);
 
-    debug(`Created movie "${savedMovie.title}"`);
-
-    res
-      .status(201)
-      .set('Location', `${config.baseUrl}/api/movies/${savedMovie._id}`)
-      .send(savedMovie);
-  });
+      res
+        .status(201)
+        .set('Location', `${config.baseUrl}/api/movies/${savedMovie._id}`)
+        .send(savedMovie);
+    })
+    .catch(next);
 });
 
 /**
@@ -118,40 +117,33 @@ router.post('/', utils.requireJson, function (req, res, next) {
  *       }
  *     ]
  */
-router.get('/', function (req, res, next) {
+router.get('/', (req, res, next) => {
   // Count total movies matching the URL query parameters
   const countQuery = queryMovies(req);
-  countQuery.count(function (err, total) {
-    if (err) {
-      return next(err);
-    }
+  countQuery
+    .countDocuments(total => {
+      // Prepare the initial database query from the URL query parameters
+      let query = queryMovies(req);
 
-    // Prepare the initial database query from the URL query parameters
-    let query = queryMovies(req);
+      // Parse pagination parameters from URL query parameters
+      const { page, pageSize } = utils.getPaginationParameters(req);
 
-    // Parse pagination parameters from URL query parameters
-    const { page, pageSize } = utils.getPaginationParameters(req);
+      // Apply the pagination to the database query
+      query = query.skip((page - 1) * pageSize).limit(pageSize);
 
-    // Apply the pagination to the database query
-    query = query.skip((page - 1) * pageSize).limit(pageSize);
+      // Add the Link header to the response
+      utils.addLinkHeader('/api/movies', page, pageSize, total, res);
 
-    // Add the Link header to the response
-    utils.addLinkHeader('/api/movies', page, pageSize, total, res);
-
-    // Populate the directorId if indicated in the "include" URL query parameter
-    if (utils.responseShouldInclude(req, 'director')) {
-      query = query.populate('directorId');
-    }
-
-    // Execute the query
-    query.sort({ title: 1 }).exec(function (err, movies) {
-      if (err) {
-        return next(err);
+      // Populate the directorId if indicated in the "include" URL query parameter
+      if (utils.responseShouldInclude(req, 'director')) {
+        query = query.populate('directorId');
       }
 
-      res.send(movies);
-    });
-  });
+      // Execute the query
+      return query.exec();
+    })
+    .then(movies => res.send(movies))
+    .catch(next);
 });
 
 /**
@@ -181,7 +173,7 @@ router.get('/', function (req, res, next) {
  *       "createdAt": "1988-07-12T00:00:00.000Z"
  *     }
  */
-router.get('/:id', loadMovieFromParamsMiddleware, function (req, res, next) {
+router.get('/:id', loadMovieFromParamsMiddleware, (req, res, next) => {
   res.send(req.movie);
 });
 
@@ -219,7 +211,7 @@ router.get('/:id', loadMovieFromParamsMiddleware, function (req, res, next) {
  *       "createdAt": "1988-07-12T00:00:00.000Z"
  *     }
  */
-router.patch('/:id', utils.requireJson, loadMovieFromParamsMiddleware, function (req, res, next) {
+router.patch('/:id', utils.requireJson, loadMovieFromParamsMiddleware, (req, res, next) => {
   // Update only properties present in the request body
   if (req.body.title !== undefined) {
     req.movie.title = req.body.title;
@@ -229,14 +221,13 @@ router.patch('/:id', utils.requireJson, loadMovieFromParamsMiddleware, function 
     req.movie.rating = req.body.rating;
   }
 
-  req.movie.save(function (err, savedMovie) {
-    if (err) {
-      return next(err);
-    }
-
-    debug(`Updated movie "${savedMovie.title}"`);
-    res.send(savedMovie);
-  });
+  req.movie
+    .save()
+    .then(savedMovie => {
+      debug(`Updated movie "${savedMovie.title}"`);
+      res.send(savedMovie);
+    })
+    .catch(next);
 });
 
 /**
@@ -274,19 +265,18 @@ router.patch('/:id', utils.requireJson, loadMovieFromParamsMiddleware, function 
  *       "createdAt": "1988-07-12T00:00:00.000Z"
  *     }
  */
-router.put('/:id', utils.requireJson, loadMovieFromParamsMiddleware, function (req, res, next) {
+router.put('/:id', utils.requireJson, loadMovieFromParamsMiddleware, (req, res, next) => {
   // Update all properties (regardless of whether the are present in the request body or not)
   req.movie.title = req.body.title;
   req.movie.rating = req.body.rating;
 
-  req.movie.save(function (err, savedMovie) {
-    if (err) {
-      return next(err);
-    }
-
-    debug(`Updated movie "${savedMovie.title}"`);
-    res.send(savedMovie);
-  });
+  req.movie
+    .save()
+    .then(savedMovie => {
+      debug(`Updated movie "${savedMovie.title}"`);
+      res.send(savedMovie);
+    })
+    .catch(next);
 });
 
 /**
@@ -305,15 +295,14 @@ router.put('/:id', utils.requireJson, loadMovieFromParamsMiddleware, function (r
  * @apiSuccessExample 204 No Content
  *     HTTP/1.1 204 No Content
  */
-router.delete('/:id', loadMovieFromParamsMiddleware, function (req, res, next) {
-  req.movie.remove(function (err) {
-    if (err) {
-      return next(err);
-    }
-
-    debug(`Deleted movie "${req.movie.title}"`);
-    res.sendStatus(204);
-  });
+router.delete('/:id', loadMovieFromParamsMiddleware, (req, res, next) => {
+  req.movie
+    .remove()
+    .then(() => {
+      debug(`Deleted movie "${req.movie.title}"`);
+      res.sendStatus(204);
+    })
+    .catch(next);
 });
 
 /**
@@ -360,16 +349,17 @@ function loadMovieFromParamsMiddleware(req, res, next) {
     query = query.populate('directorId');
   }
 
-  query.exec(function (err, movie) {
-    if (err) {
-      return next(err);
-    } else if (!movie) {
-      return movieNotFound(res, movieId);
-    }
+  query
+    .exec()
+    .then(movie => {
+      if (!movie) {
+        return movieNotFound(res, movieId);
+      }
 
-    req.movie = movie;
-    next();
-  });
+      req.movie = movie;
+      next();
+    })
+    .catch(next);
 }
 
 /**
