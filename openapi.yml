@@ -14,6 +14,22 @@ servers:
 
 paths:
   /people:
+    post:
+      summary: Create a person.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PersonInRequestBody'
+      responses:
+        201:
+          description: The person was successfully created.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Person'
+        422:
+          $ref: '#/components/responses/PersonValidationError'
     get:
       summary: List people.
       parameters:
@@ -31,22 +47,23 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Person'
-    post:
-      summary: Create a person.
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/PersonInRequestBody'
+  /people/{personId}:
+    get:
+      summary: Retrieve a person's details.
+      parameters:
+        - name: personId
+          in: path
+          description: The unique identifier of the person.
+          required: true
+          schema:
+            type: string
       responses:
-        201:
-          description: The person was successfully created.
+        200:
+          description: The person was successfully retrieved.
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Person'
-        422:
-          $ref: '#/components/responses/PersonValidationError'
 
 components:
   headers:
@@ -113,6 +130,7 @@ components:
         id:
           type: string
           description: The unique identifier of the person.
+          example: d038e6fedc4cf8b5ace5a689
         name:
           type: string
           description: The name of the person (must be unique).
