@@ -24,6 +24,7 @@ openApiDocument.servers[0].url = `${config.baseUrl}/api`;
 router.get('/openapi.json', (req, res) => res.json(openApiDocument));
 
 const swaggerUiExpressOptions = {
+  customSiteTitle: 'Demonstration REST API (OpenAPI)',
   swaggerOptions: {
     url: '/docs/openapi.json'
   }

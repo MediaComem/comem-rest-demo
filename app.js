@@ -7,6 +7,7 @@ import path from 'path';
 import * as config from './config.js';
 import moviesApi from './routes/movies.js';
 import peopleApi from './routes/people.js';
+import rootApi from './routes/api.js';
 import adminRoutes from './routes/admin.js';
 import docRoutes from './routes/docs.js';
 import unrestRoutes from './unrest/routes.js';
@@ -14,11 +15,11 @@ import unrestRoutes from './unrest/routes.js';
 // Connect to the database (can be overriden from environment)
 mongoose.connect(config.databaseUrl);
 
-const app = express();
-
 if (config.debug) {
   mongoose.set('debug', true);
 }
+
+const app = express();
 
 // View engine setup
 app.set('views', path.join(config.projectRoot, 'views'));
@@ -34,13 +35,19 @@ app.use(bodyParser.urlencoded({ extended: false }));
 // REST API routes
 app.use('/api/movies', moviesApi);
 app.use('/api/people', peopleApi);
-app.use('/admin', adminRoutes);
+app.use('/api', rootApi);
+
+// REST API documentation
 app.use('/docs', docRoutes);
+
+// Other routes
+app.use('/admin', adminRoutes);
 app.use('/unrest', unrestRoutes);
 
+// Redirect to the documentation by default.
 app.get('/', (req, res) => res.redirect('/docs'));
 
-// Catch 404 and forward to error handler
+// Catch 404 and forward to error handler.
 app.use(function (req, res, next) {
   const err = new Error('Not Found');
   err.status = 404;

@@ -1,8 +1,10 @@
 openapi: '3.0.3'
 
 info:
-  title: REST Demo
+  title: Demonstration REST API
   description: >-
+    **A demonstration REST API developed with [Express](https://expressjs.com).**
+
     This API allows you to manipulate People and Movies.
     A Movie has one director (a Person).
   version: 1.0.0
@@ -339,9 +341,11 @@ components:
       in: query
       example: director
       schema:
-        type: string
-        enum:
-          - director
+        type: array
+        items:
+          type: string
+          enum:
+            - director
     page:
       name: page
       in: query

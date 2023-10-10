@@ -1,4 +1,6 @@
 /.nyc_output
 /coverage
+/docs/*
+!/docs/.keep
 /node_modules
 /tmp

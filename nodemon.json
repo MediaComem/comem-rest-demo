@@ -1,7 +1,7 @@
 {
   "watch": [
     "app.js",
-    "bin/www",
+    "bin/www.js",
     "models/**/*.js",
     "openapi.yml",
     "routes/**/*.js",
