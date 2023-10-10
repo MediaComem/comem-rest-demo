@@ -12,15 +12,184 @@ info:
 servers:
   - url: https://demo.archioweb.ch/api
 
+tags:
+  - name: people
+    description: Person management
+  - name: movies
+    description: Movie management
+
 paths:
-  /people:
+  /movies:
     post:
-      summary: Create a person.
+      summary: Create a movie.
+      tags:
+        - movies
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/PersonInRequestBody'
+              $ref: '#/components/schemas/MovieData'
+      responses:
+        201:
+          description: The movie was successfully created.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Movie'
+        422:
+          $ref: '#/components/responses/MovieValidationError'
+    get:
+      summary: List movies.
+      tags:
+        - movies
+      parameters:
+        - $ref: '#/components/parameters/page'
+        - $ref: '#/components/parameters/pageSize'
+        - $ref: '#/components/parameters/includePersonRelations'
+        - name: directorId
+          in: query
+          description: Filter movies by director. Can be specified multiple time to find movies with any of the specified directors.
+          schema:
+            type: string
+            example: 7fe91a9a41bc839033eedf0f
+        - name: rating
+          in: query
+          description: Filter movies by exact rating.
+          schema:
+            type: number
+            example: 8.5
+            minimum: 0
+            maximum: 10
+        - name: ratedAtLeast
+          in: query
+          description: Filter movies keeping only those with a rating greater than or equal to the specified value.
+          schema:
+            type: number
+            example: 8.5
+            minimum: 0
+            maximum: 10
+        - name: ratedAtMost
+          in: query
+          description: Filter movies keeping only those with a rating less than or equal to the specified value.
+          schema:
+            type: number
+            example: 8.5
+            minimum: 0
+            maximum: 10
+      responses:
+        200:
+          description: The page of movies was successfully retrieved.
+          headers:
+            Link:
+              $ref: '#/components/headers/PaginationLink'
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Movie'
+  /movies/{movieId}:
+    get:
+      summary: Retrieve a movie's details.
+      tags:
+        - movies
+      parameters:
+        - name: movieId
+          in: path
+          description: The unique identifier of the movie.
+          required: true
+          schema:
+            type: string
+        - $ref: '#/components/parameters/includePersonRelations'
+      responses:
+        200:
+          description: The movie was successfully retrieved.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Movie'
+        404:
+          $ref: '#/components/responses/MovieNotFoundError'
+    put:
+      summary: Update a movie.
+      tags:
+        - movies
+      parameters:
+        - name: movieId
+          in: path
+          description: The unique identifier of the movie.
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MovieData'
+      responses:
+        200:
+          description: The movie was successfully updated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Movie'
+        404:
+          $ref: '#/components/responses/MovieNotFoundError'
+        422:
+          $ref: '#/components/responses/MovieValidationError'
+    patch:
+      summary: Partially update a movie.
+      tags:
+        - movies
+      parameters:
+        - name: movieId
+          in: path
+          description: The unique identifier of the movie.
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PartialMovieData'
+      responses:
+        200:
+          description: The movie was successfully updated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Movie'
+        404:
+          $ref: '#/components/responses/MovieNotFoundError'
+        422:
+          $ref: '#/components/responses/MovieValidationError'
+    delete:
+      summary: Delete a movie.
+      tags:
+        - movies
+      parameters:
+        - name: movieId
+          in: path
+          description: The unique identifier of the movie.
+          required: true
+          schema:
+            type: string
+      responses:
+        204:
+          description: The movie was successfully deleted.
+        404:
+          $ref: '#/components/responses/MovieNotFoundError'
+  /people:
+    post:
+      summary: Create a person.
+      tags:
+        - people
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PersonData'
       responses:
         201:
           description: The person was successfully created.
@@ -32,12 +201,24 @@ paths:
           $ref: '#/components/responses/PersonValidationError'
     get:
       summary: List people.
+      tags:
+        - people
       parameters:
         - $ref: '#/components/parameters/page'
         - $ref: '#/components/parameters/pageSize'
+        - name: gender
+          in: query
+          description: Filter people by gender.
+          schema:
+            type: string
+            enum:
+              - male
+              - female
+              - other
+            example: other
       responses:
         200:
-          description: The list was successfully retrieved.
+          description: The page of people was successfully retrieved.
           headers:
             Link:
               $ref: '#/components/headers/PaginationLink'
@@ -50,6 +231,8 @@ paths:
   /people/{personId}:
     get:
       summary: Retrieve a person's details.
+      tags:
+        - people
       parameters:
         - name: personId
           in: path
@@ -64,6 +247,83 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Person'
+        404:
+          $ref: '#/components/responses/PersonNotFoundError'
+    put:
+      summary: Update a person.
+      tags:
+        - people
+      parameters:
+        - name: personId
+          in: path
+          description: The unique identifier of the person.
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PersonData'
+      responses:
+        200:
+          description: The person was successfully updated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Person'
+        404:
+          $ref: '#/components/responses/PersonNotFoundError'
+        422:
+          $ref: '#/components/responses/PersonValidationError'
+    patch:
+      summary: Partially update a person.
+      tags:
+        - people
+      parameters:
+        - name: personId
+          in: path
+          description: The unique identifier of the person.
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PartialPersonData'
+      responses:
+        200:
+          description: The person was successfully updated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Person'
+        404:
+          $ref: '#/components/responses/PersonNotFoundError'
+        422:
+          $ref: '#/components/responses/PersonValidationError'
+    delete:
+      summary: Delete a person.
+      tags:
+        - people
+      parameters:
+        - name: personId
+          in: path
+          description: The unique identifier of the person.
+          required: true
+          schema:
+            type: string
+      responses:
+        204:
+          description: The person was successfully deleted.
+        404:
+          $ref: '#/components/responses/PersonNotFoundError'
+        409:
+          description: The person could not be deleted because it is referenced by one or more movies as a director.
+          content:
+            text/plain:
+              example: Cannot delete person John Doe because movies are directed by them
 
 components:
   headers:
@@ -74,6 +334,14 @@ components:
       example: >-
         <https://demo.archioweb.ch/api/people?page=1&pageSize=50>; rel="first prev"
   parameters:
+    includePersonRelations:
+      name: include
+      in: query
+      example: director
+      schema:
+        type: string
+        enum:
+          - director
     page:
       name: page
       in: query
@@ -90,11 +358,37 @@ components:
         max: 100
       example: 25
   responses:
+    MovieNotFoundError:
+      description: The movie does not exist.
+      content:
+        text/plain:
+          example: No movie found with ID 7fe91a9a41bc839033eedf0f.
+    MovieValidationError:
+      description: The movie is invalid.
+      content:
+        application/json:
+          example: |-
+            {
+              "message": "Movie validation failed",
+              "errors": {
+                "gender": {
+                  "kind": "required",
+                  "message": "Path `title` is required.",
+                  "name": "ValidatorError",
+                  "path": "title",
+                  "properties": {
+                    "message": "Path `title` is required.",
+                    "path": "title",
+                    "type": "required"
+                  }
+                }
+              }
+            }
     PersonNotFoundError:
       description: The person does not exist.
       content:
         text/plain:
-          example: No person found with ID 58b2926f5e1def0123e97bc0.
+          example: No person found with ID d038e6fedc4cf8b5ace5a689.
     PersonValidationError:
       description: The person is invalid.
       content:
@@ -124,6 +418,85 @@ components:
               }
             }
   schemas:
+    Movie:
+      type: object
+      properties:
+        id:
+          type: string
+          description: The unique identifier of the movie.
+          example: 7fe91a9a41bc839033eedf0f
+        title:
+          type: string
+          description: The title of the movie (must be unique).
+          minlength: 3
+          maxlength: 50
+          example: The Shawshank Redemption
+        rating:
+          type: number
+          description: The average rating of the movie between 1 and 10.
+          minimum: 0
+          maximum: 10
+          example: 8.5
+        directorId:
+          type: string
+          description: >-
+            The unique identifier of the person who directed the movie.
+          example: d038e6fedc4cf8b5ace5a689
+        director:
+          $ref: '#/components/schemas/Person'
+        createdAt:
+          type: string
+          description: The date at which the movie was created.
+          format: date-time
+          example: '2020-01-02T10:00:00.000Z'
+      required:
+        - id
+        - title
+        - directorId
+        - createdAt
+    MovieData:
+      type: object
+      properties:
+        title:
+          type: string
+          description: The title of the movie (must be unique).
+          minlength: 3
+          maxlength: 50
+          example: The Shawshank Redemption
+        rating:
+          type: number
+          description: The average rating of the movie between 1 and 10.
+          minimum: 0
+          maximum: 10
+          example: 8.5
+        directorId:
+          type: string
+          description: >-
+            The unique identifier of the person who directed the movie.
+          example: d038e6fedc4cf8b5ace5a689
+      required:
+        - title
+        - directorId
+    PartialMovieData:
+      type: object
+      properties:
+        title:
+          type: string
+          description: The title of the movie (must be unique).
+          minlength: 3
+          maxlength: 50
+          example: The Shawshank Redemption
+        rating:
+          type: number
+          description: The average rating of the movie between 1 and 10.
+          minimum: 0
+          maximum: 10
+          example: 8.5
+        directorId:
+          type: string
+          description: >-
+            The unique identifier of the person who directed the movie.
+          example: d038e6fedc4cf8b5ace5a689
     Person:
       type: object
       properties:
@@ -152,24 +525,23 @@ components:
             ([ISO-8601](https://en.wikipedia.org/wiki/ISO_8601) format).
           format: date-time
           example: '2001-02-03T08:30:00.000Z'
-        createdAt:
-          type: string
-          description: The date at which the person was registered.
-          format: date-time
-          example: '2020-01-02T10:00:00.000Z'
         directedMovies:
           type: integer
           description: The number of movies the person directed.
           min: 0
           example: 2
+        createdAt:
+          type: string
+          description: The date at which the person was registered.
+          format: date-time
+          example: '2020-01-02T10:00:00.000Z'
       required:
         - id
         - name
         - gender
         - createdAt
         - directedMovies
-      additionalProperties: false
-    PersonInRequestBody:
+    PersonData:
       type: object
       properties:
         name:
@@ -196,4 +568,28 @@ components:
       required:
         - name
         - gender
-      additionalProperties: false
+    PartialPersonData:
+      type: object
+      properties:
+        name:
+          type: string
+          description: The name of the person (must be unique).
+          minlength: 3
+          maxlength: 30
+          example: John Doe
+        gender:
+          type: string
+          description: The gender of the person.
+          enum:
+            - male
+            - female
+            - other
+          example: male
+        birthDate:
+          type: string
+          description: >-
+            The birth date of the person
+            ([ISO-8601](https://en.wikipedia.org/wiki/ISO_8601) format).
+          format: date-time
+          example: '2001-02-03T08:30:00.000Z'
+      required: []

@@ -1,16 +1,14 @@
 import bodyParser from 'body-parser';
 import express from 'express';
-import fs from 'fs';
-import yaml from 'js-yaml';
 import logger from 'morgan';
 import mongoose from 'mongoose';
 import path from 'path';
-import swaggerUi from 'swagger-ui-express';
 
 import * as config from './config.js';
 import moviesApi from './routes/movies.js';
 import peopleApi from './routes/people.js';
 import adminRoutes from './routes/admin.js';
+import docRoutes from './routes/docs.js';
 import unrestRoutes from './unrest/routes.js';
 
 // Connect to the database (can be overriden from environment)
@@ -33,21 +31,14 @@ if (config.env !== 'test') {
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
-// Parse the OpenAPI document.
-const openApiDocument = yaml.load(fs.readFileSync('./openapi.yml'));
-// Update the first server's URL to this application's.
-openApiDocument.servers[0].url = `${config.baseUrl}/api`;
-// Server the Swagger UI documentation.
-app.use('/swagger', swaggerUi.serve, swaggerUi.setup(openApiDocument));
-
-// Serve the apiDoc documentation on /.
-app.use(express.static(path.join(config.projectRoot, 'docs')));
-
 // REST API routes
 app.use('/api/movies', moviesApi);
 app.use('/api/people', peopleApi);
 app.use('/admin', adminRoutes);
+app.use('/docs', docRoutes);
 app.use('/unrest', unrestRoutes);
+
+app.get('/', (req, res) => res.redirect('/docs'));
 
 // Catch 404 and forward to error handler
 app.use(function (req, res, next) {
