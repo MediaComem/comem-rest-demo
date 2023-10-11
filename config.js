@@ -1,6 +1,11 @@
+import { readFileSync } from 'fs';
+import { join as joinPath } from 'path';
 import { fileURLToPath, URL } from 'url';
 
 export const projectRoot = fileURLToPath(new URL('.', import.meta.url));
+
+const pkg = JSON.parse(readFileSync(joinPath(projectRoot, 'package.json'), 'utf-8'));
+export const version = pkg.version;
 
 export const env = process.env.NODE_ENV || 'development';
 
