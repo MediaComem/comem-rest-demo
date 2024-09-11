@@ -66,7 +66,7 @@ The tests are implemented with [Mocha][mocha], [Chai][chai] and
 [SuperTest][supertest].
 
 [chai]: https://www.chaijs.com
-[docs]: https://mediacomem.github.io/comem-rest-demo/
+[docs]: https://demo.archioweb.ch
 [express]: https://expressjs.com
 [mocha]: https://mochajs.org
 [mongo]: https://www.mongodb.com

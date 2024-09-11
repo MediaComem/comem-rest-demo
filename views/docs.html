@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Demonstration REST API Documentation</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
+      crossorigin="anonymous"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css"
+    />
+    <style>
+      .feature-icon {
+        width: 4rem;
+        height: 4rem;
+        border-radius: 0.75rem;
+      }
+
+      .icon-square {
+        width: 3rem;
+        height: 3rem;
+        border-radius: 0.75rem;
+      }
+
+      .text-shadow-1 {
+        text-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.25);
+      }
+      .text-shadow-2 {
+        text-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.25);
+      }
+      .text-shadow-3 {
+        text-shadow: 0 0.5rem 1.5rem rgba(0, 0, 0, 0.25);
+      }
+
+      .card-cover {
+        background-repeat: no-repeat;
+        background-position: center center;
+        background-size: cover;
+      }
+
+      .feature-icon-small {
+        width: 3rem;
+        height: 3rem;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container px-4 py-5" id="featured-3">
+      <h2 class="pb-2 border-bottom">Demonstration REST API Documentation</h2>
+      <p class="lead">
+        A demonstration RESTful API implemented with <a href="https://expressjs.com">Express.js</a>.
+        This API allows you to manipulate People and Movies. A Movie has one director (a Person).
+      </p>
+      <p class="lead">This project has two documentations generated with different tools.</p>
+
+      <div class="row g-4 py-5 row-cols-1 row-cols-lg-2">
+        <div class="feature col">
+          <div
+            class="feature-icon d-inline-flex align-items-center justify-content-center text-bg-primary bg-gradient fs-2 mb-3"
+          >
+            <i class="bi bi-file-code"></i>
+          </div>
+          <h3 class="fs-2 text-body-emphasis">OpenAPI</h3>
+          <p>
+            The
+            <a href="https://swagger.io/specification/" target="_blank"
+              >OpenAPI Specification (OAS)</a
+            >
+            defines a standard, language-agnostic interface to HTTP APIs which allows both humans
+            and computers to discover and understand the capabilities of the service without access
+            to source code, documentation, or through network traffic inspection.
+          </p>
+          <a
+            href="/docs/openapi"
+            class="d-flex align-items-center link-offset-2 fw-bold"
+            target="_blank"
+          >
+            Read the API documentation
+            <i class="bi bi-chevron-right"></i>
+          </a>
+        </div>
+
+        <div class="feature col">
+          <div
+            class="feature-icon d-inline-flex align-items-center justify-content-center text-bg-primary bg-gradient fs-2 mb-3"
+          >
+            <i class="bi bi-file-code"></i>
+          </div>
+          <h3 class="fs-2 text-body-emphasis">apiDoc</h3>
+          <p>
+            Inline Documentation for RESTful web APIs.
+            <a href="https://apidocjs.com">apiDoc</a> creates a documentation from API annotations
+            in your source code.
+          </p>
+          <a
+            href="/docs/apidoc"
+            class="d-flex align-items-center link-offset-2 fw-bold"
+            target="_blank"
+          >
+            Read the API documentation
+            <i class="bi bi-chevron-right"></i>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+      crossorigin="anonymous"
+    ></script>
+  </body>
+</html>

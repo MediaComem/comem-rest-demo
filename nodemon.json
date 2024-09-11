@@ -1,7 +1,9 @@
 {
   "watch": [
+    "apidoc.json",
     "app.js",
-    "bin/www",
+    "bin/www.js",
+    "config.js",
     "models/**/*.js",
     "openapi.yml",
     "routes/**/*.js",

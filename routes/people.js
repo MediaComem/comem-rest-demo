@@ -107,7 +107,17 @@ router.get('/', (req, res, next) => {
     // Parse pagination parameters from URL query parameters.
     const { page, pageSize } = utils.getPaginationParameters(req);
 
-    Person.aggregate([
+    const pipeline = [];
+
+    if (typeof req.query.gender === 'string') {
+      pipeline.push({
+        $match: {
+          gender: req.query.gender
+        }
+      });
+    }
+
+    pipeline.push(
       {
         $lookup: {
           from: 'movies',
@@ -159,7 +169,9 @@ router.get('/', (req, res, next) => {
       {
         $limit: pageSize
       }
-    ])
+    );
+
+    Person.aggregate(pipeline)
       .exec()
       .then(people => {
         utils.addLinkHeader('/api/people', page, pageSize, total, res);
