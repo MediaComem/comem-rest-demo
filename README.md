@@ -2,8 +2,8 @@
 
 A demonstration RESTful API implemented with [Express][express].
 
-[![GitHub](https://img.shields.io/github/license/MediaComem/comem-rest-demo)](https://opensource.org/licenses/MIT)
-[![Build](https://github.com/MediaComem/comem-rest-demo/actions/workflows/build.yml/badge.svg)](https://github.com/MediaComem/comem-rest-demo/actions/workflows/build.yml)
+[![license](https://img.shields.io/github/license/MediaComem/comem-rest-demo)](https://opensource.org/licenses/MIT)
+[![build](https://github.com/MediaComem/comem-rest-demo/actions/workflows/build.yml/badge.svg)](https://github.com/MediaComem/comem-rest-demo/actions/workflows/build.yml)
 
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
