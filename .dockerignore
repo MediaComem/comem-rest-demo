@@ -1,0 +1,13 @@
+# https://docs.docker.com/build/concepts/context/#dockerignore-files
+/.ackrc
+/.github
+/compose.yml
+/coverage
+/.editorconfig
+/jest.config.json
+/node_modules
+/nodemon.json
+/.prettierignoer
+/.prettierrc.yml
+/tests
+/.tool-versions

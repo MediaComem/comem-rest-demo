@@ -18,8 +18,8 @@ A demonstration RESTful API implemented with [Express][express].
 
 ## Requirements
 
-- [Node.js][node] 14.x
-- [MongoDB][mongo] 4.x
+- [Node.js][node] 22.x
+- [MongoDB][mongo] 7.x
 
 ## Usage
 

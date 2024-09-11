@@ -1,0 +1,32 @@
+name: archioweb-demo
+
+services:
+  app:
+    build:
+      context: .
+    image: archioweb/demo
+    depends_on:
+      - db
+    environment:
+      - DATABASE_URL=mongodb://db:27017/demo
+      - DEBUG=demo:*
+    init: true
+    networks:
+      - app
+      - db
+    ports:
+      - '${ARCHIOWEB_DEMO_PORT:-3000}:3000'
+
+  db:
+    image: mongo:7.0.14
+    networks:
+      - db
+    volumes:
+      - db-data:/data/db
+
+networks:
+  app:
+  db:
+
+volumes:
+  db-data:
