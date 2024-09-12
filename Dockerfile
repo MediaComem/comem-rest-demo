@@ -20,6 +20,8 @@ FROM node:22.8.0-alpine
 ENV NODE_ENV=production \
     PORT=3000
 
+LABEL org.opencontainers.image.authors="docker@alphahydrae.ch"
+
 WORKDIR /app
 
 RUN addgroup -S demo && \
