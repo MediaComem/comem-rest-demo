@@ -3,6 +3,7 @@
 A demonstration RESTful API implemented with [Express][express].
 
 [![build](https://github.com/MediaComem/comem-rest-demo/actions/workflows/build.yml/badge.svg)](https://github.com/MediaComem/comem-rest-demo/actions/workflows/build.yml)
+[![publish](https://github.com/MediaComem/comem-rest-demo/actions/workflows/publish.yml/badge.svg)](https://github.com/MediaComem/comem-rest-demo/actions/workflows/publish.yml)
 [![license](https://img.shields.io/github/license/MediaComem/comem-rest-demo)](https://opensource.org/licenses/MIT)
 
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
