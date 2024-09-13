@@ -9,8 +9,7 @@ COPY package.json package-lock.json ./
 RUN npm ci
 
 COPY . .
-RUN npm run apidoc && \
-    npm prune --production
+RUN npm prune --production
 
 # Production image
 # ================
