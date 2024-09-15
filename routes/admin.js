@@ -7,13 +7,13 @@ import * as utils from './utils.js';
 const router = express.Router();
 
 router.post('/reset', utils.authenticate, function (req, res, next) {
-  removeAll()
+  reset()
     .then(() => res.sendStatus(204))
     .catch(next);
 });
 
-function removeAll() {
-  return Movie.remove({}).then(() => Person.remove({}));
+function reset() {
+  return Movie.deleteMany({}).then(() => Person.deleteMany({}));
 }
 
 export default router;
