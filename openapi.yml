@@ -1,4 +1,4 @@
-openapi: '3.0.3'
+openapi: '3.1.0'
 
 info:
   title: Demonstration REST API
@@ -351,15 +351,15 @@ components:
       in: query
       schema:
         type: integer
-        min: 1
+        minimum: 1
       example: 1
     pageSize:
       name: pageSize
       in: query
       schema:
         type: integer
-        min: 1
-        max: 100
+        minimum: 1
+        maximum: 100
       example: 25
   responses:
     MovieNotFoundError:
@@ -371,23 +371,18 @@ components:
       description: The movie is invalid.
       content:
         application/json:
-          example: |-
-            {
-              "message": "Movie validation failed",
-              "errors": {
-                "gender": {
-                  "kind": "required",
-                  "message": "Path `title` is required.",
-                  "name": "ValidatorError",
-                  "path": "title",
-                  "properties": {
-                    "message": "Path `title` is required.",
-                    "path": "title",
-                    "type": "required"
-                  }
-                }
-              }
-            }
+          example:
+            message: Movie validation failed
+            errors:
+              gender:
+                kind: required
+                message: 'Path `title` is required.'
+                name: ValidatorError
+                path: title
+                properties:
+                  message: 'Path `title` is required.'
+                  path: title
+                  type: required
     PersonNotFoundError:
       description: The person does not exist.
       content:
@@ -397,30 +392,24 @@ components:
       description: The person is invalid.
       content:
         application/json:
-          example: |-
-            {
-              "message": "Person validation failed",
-              "errors": {
-                "gender": {
-                  "kind": "enum",
-                  "message": "`foo` is not a valid enum value for path `gender`.",
-                  "name": "ValidatorError",
-                  "path": "gender",
-                  "properties": {
-                    "enumValues": [
-                      "male",
-                      "female",
-                      "other"
-                    ],
-                    "message": "`{VALUE}` is not a valid enum value for path `{PATH}`.",
-                    "path": "gender",
-                    "type": "enum",
-                    "value": "foo"
-                  },
-                  "value": "foo"
-                }
-              }
-            }
+          example:
+            message: Person validation failed
+            errors:
+              gender:
+                kind: enum
+                message: '`foo` is not a valid enum value for path `gender`'
+                name: ValidatorError
+                path: gender
+                properties:
+                  enumValues:
+                    - male
+                    - female
+                    - other
+                  message: '`{VALUE}` is not a valid enum value for path `{PATH}`.'
+                  path: gender
+                  type: enum
+                  value: foo
+                value: foo
   schemas:
     Movie:
       type: object
@@ -432,8 +421,8 @@ components:
         title:
           type: string
           description: The title of the movie (must be unique).
-          minlength: 3
-          maxlength: 50
+          minLength: 3
+          maxLength: 50
           example: The Shawshank Redemption
         rating:
           type: number
@@ -464,8 +453,8 @@ components:
         title:
           type: string
           description: The title of the movie (must be unique).
-          minlength: 3
-          maxlength: 50
+          minLength: 3
+          maxLength: 50
           example: The Shawshank Redemption
         rating:
           type: number
@@ -487,8 +476,8 @@ components:
         title:
           type: string
           description: The title of the movie (must be unique).
-          minlength: 3
-          maxlength: 50
+          minLength: 3
+          maxLength: 50
           example: The Shawshank Redemption
         rating:
           type: number
@@ -511,8 +500,8 @@ components:
         name:
           type: string
           description: The name of the person (must be unique).
-          minlength: 3
-          maxlength: 30
+          minLength: 3
+          maxLength: 30
           example: John Doe
         gender:
           type: string
@@ -532,7 +521,7 @@ components:
         directedMovies:
           type: integer
           description: The number of movies the person directed.
-          min: 0
+          minimum: 0
           example: 2
         createdAt:
           type: string
@@ -551,8 +540,8 @@ components:
         name:
           type: string
           description: The name of the person (must be unique).
-          minlength: 3
-          maxlength: 30
+          minLength: 3
+          maxLength: 30
           example: John Doe
         gender:
           type: string
@@ -578,8 +567,8 @@ components:
         name:
           type: string
           description: The name of the person (must be unique).
-          minlength: 3
-          maxlength: 30
+          minLength: 3
+          maxLength: 30
           example: John Doe
         gender:
           type: string
