@@ -1,7 +1,7 @@
 # Builder image
 # =============
 
-FROM node:22.8.0-alpine AS builder
+FROM node:22.9.0-alpine AS builder
 
 WORKDIR /app
 
@@ -14,7 +14,7 @@ RUN npm prune --production
 # Production image
 # ================
 
-FROM node:22.8.0-alpine
+FROM node:22.9.0-alpine
 
 ENV NODE_ENV=production \
     PORT=3000
