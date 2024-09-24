@@ -1,6 +1,7 @@
-/.nyc_output
+# https://git-scm.com/docs/gitignore
 /coverage
 /docs/*
 !/docs/.keep
 /node_modules
+/.nyc_output
 /tmp
