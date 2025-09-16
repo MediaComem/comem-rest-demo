@@ -1,22 +1,12 @@
 #!/usr/bin/env node
 
-import * as apiDoc from 'apidoc';
 import debugFactory from 'debug';
 import http from 'http';
-import path from 'path';
 
 import app from '../app.js';
 import * as config from '../config.js';
 
 const debug = debugFactory('demo:server');
-
-// Generate apiDoc documentation on startup.
-const docsDest = path.join(config.projectRoot, 'docs');
-apiDoc.createDoc({
-  src: [path.join(config.projectRoot, 'routes')],
-  dest: docsDest
-});
-debug(`Generated apiDoc documentation into ./${path.relative(config.projectRoot, docsDest)}`);
 
 // Get port from environment and store in Express
 const port = normalizePort(config.port);

@@ -4,21 +4,18 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "apidoc": "apidoc -i routes -o docs",
-    "apidoc:watch": "onchange APIDOC.md routes/**/*.js -- npm run apidoc",
-    "dev": "concurrently \"npm run nodemon\" \"npm run apidoc:watch\"",
+    "dev": "npm run nodemon",
     "doctoc": "doctoc --github --notitle README.md",
     "format": "prettier --config ./.prettierrc.yml --check .",
     "format:write": "prettier --config ./.prettierrc.yml --write .",
-    "nodemon": "DEBUG=demo:* AUTH_TOKEN=secret nodemon",
+    "nodemon": "cross-env AUTH_TOKEN=secret DEBUG=demo:* nodemon",
     "start": "node ./bin/www.js",
     "test": "cross-env NODE_ENV=test NODE_OPTIONS=--experimental-vm-modules jest"
   },
   "dependencies": {
-    "apidoc": "^1.2.0",
-    "body-parser": "^1.20.0",
+    "body-parser": "^2.2.0",
     "debug": "^4.3.4",
-    "express": "^4.18.1",
+    "express": "^5.1.0",
     "format-link-header": "^3.1.1",
     "js-yaml": "^4.1.0",
     "mongoose": "^8.6.2",
@@ -28,15 +25,15 @@
   },
   "devDependencies": {
     "concurrently": "^9.0.0",
-    "cross-env": "^7.0.3",
+    "cross-env": "^10.0.0",
     "doctoc": "^2.2.0",
-    "jest": "^29.0.0",
+    "jest": "^30.1.3",
     "nodemon": "^3.0.1",
     "onchange": "^7.1.0",
     "prettier": "^3.0.3",
     "supertest": "^7.0.0"
   },
   "engines": {
-    "node": "^22"
+    "node": "^24"
   }
 }

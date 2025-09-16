@@ -6,14 +6,14 @@ import * as utils from './utils.js';
 
 const router = express.Router();
 
-router.post('/reset', utils.authenticate, function (req, res, next) {
-  reset()
-    .then(() => res.sendStatus(204))
-    .catch(next);
+router.post('/reset', utils.authenticate, async function (req, res) {
+  await reset();
+  res.sendStatus(204);
 });
 
-function reset() {
-  return Movie.deleteMany({}).then(() => Person.deleteMany({}));
+async function reset() {
+  await Movie.deleteMany({});
+  await Person.deleteMany({});
 }
 
 export default router;

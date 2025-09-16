@@ -1,7 +1,6 @@
 # Builder image
 # =============
-
-FROM node:22.9.0-alpine AS builder
+FROM node:24.7.0-alpine AS builder
 
 WORKDIR /app
 
@@ -9,12 +8,11 @@ COPY package.json package-lock.json ./
 RUN npm ci
 
 COPY . .
-RUN npm prune --production
+RUN npm prune --omit=dev
 
 # Production image
 # ================
-
-FROM node:22.9.0-alpine
+FROM node:24.7.0-alpine
 
 ENV NODE_ENV=production \
     PORT=3000

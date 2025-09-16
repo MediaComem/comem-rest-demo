@@ -12,22 +12,17 @@ jobs:
     runs-on: ubuntu-24.04
     steps:
       - name: Checkout the repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Start MongoDB
         uses: supercharge/mongodb-github-action@1.11.0
         with:
-          mongodb-version: 7.0
+          mongodb-version: 8.0
 
       - name: Install asdf
-        uses: asdf-vm/actions/setup@v3
+        uses: asdf-vm/actions/install@v4
         with:
-          asdf_branch: v0.14.1
-
-      - name: Install Node.js with asdf
-        run: |
-          asdf plugin add nodejs
-          asdf install nodejs
+          asdf_version: v0.18.0
 
       - name: Install project dependencies
         run: |
@@ -41,6 +36,7 @@ jobs:
         run: |
           npm run format
 
-      - name: Generate apiDoc documentation
+      - name: Ensure there are no uncommitted changes
         run: |
-          npm run apidoc
+          git status --porcelain
+          test -z "$(git status --porcelain)"

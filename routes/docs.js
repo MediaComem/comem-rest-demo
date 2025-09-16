@@ -28,21 +28,15 @@ debug('Serving OpenAPI document at /docs/openapi.json');
 
 const swaggerUiExpressOptions = {
   customSiteTitle: 'Demonstration REST API (OpenAPI)',
-  swaggerOptions: {
-    url: '/docs/openapi.json'
-  }
+  swaggerOptions: { url: '/docs/openapi.json' }
 };
 
 // Serve the Open API documentation on /docs/openapi.
 router.use(
-  '/openapi',
+  '/',
   swaggerUi.serveFiles(null, swaggerUiExpressOptions),
   swaggerUi.setup(null, swaggerUiExpressOptions)
 );
 debug('Serving OpenAPI Swagger UI documentation at /docs/openapi');
-
-// Serve the apiDoc documentation on /docs/apidoc.
-router.use('/apidoc', express.static(path.join(config.projectRoot, 'docs')));
-debug('Serving apiDoc documentation at /docs/apidoc');
 
 export default router;
