@@ -22,7 +22,7 @@ jobs:
       - name: Install asdf
         uses: asdf-vm/actions/install@v4
         with:
-          asdf_version: v0.18.0
+          asdf_version: 0.18.0
 
       - name: Install project dependencies
         run: |
