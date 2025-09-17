@@ -20,7 +20,7 @@ A demonstration RESTful API implemented with [Express][express].
 ## Requirements
 
 - [Node.js][node] 24.x
-- [MongoDB][mongo] 7.x
+- [MongoDB][mongo] 7.x or 8.x
 
 ## Usage
 
