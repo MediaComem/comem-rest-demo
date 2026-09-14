@@ -32,3 +32,7 @@ COPY --chown=demo:demo --from=builder /app /app
 CMD ["node", "./bin/www.js"]
 
 EXPOSE 3000
+
+# Report the application as healthy once it answers on the API's root resource.
+HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \
+    CMD wget --quiet --spider "http://localhost:${PORT}/api" || exit 1

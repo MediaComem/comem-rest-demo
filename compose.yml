@@ -6,7 +6,11 @@ services:
       context: .
     image: archioweb/demo
     depends_on:
-      - db
+      db:
+        # Wait for MongoDB to accept connections, not merely for its container
+        # to have started, so that the application never starts against a
+        # database that is not ready yet.
+        condition: service_healthy
     environment:
       - DATABASE_URL=mongodb://db:27017/demo
       - DEBUG=demo:*
@@ -18,7 +22,13 @@ services:
       - '${ARCHIOWEB_DEMO_PORT:-3000}:3000'
 
   db:
-    image: mongo:8.0.32
+    image: mongo:8.0.30
+    healthcheck:
+      test: ['CMD', 'mongosh', '--quiet', '--eval', "db.adminCommand('ping')"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
     networks:
       - db
     volumes:
