@@ -24,6 +24,15 @@ jobs:
         with:
           asdf_version: 0.20.0
 
+      # https://github.com/actions/cache
+      - name: Cache npm downloads
+        uses: actions/cache@v6
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-npm-${{ hashFiles('package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-npm-
+
       - name: Install project dependencies
         run: |
           npm ci
