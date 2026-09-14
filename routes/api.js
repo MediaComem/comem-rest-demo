@@ -8,7 +8,7 @@ router.get('/', (req, res) =>
   res.send({
     title: 'Demonstration REST API',
     version: config.version,
-    docs: `${config.baseUrl}/docs}`
+    docs: `${config.baseUrl}/docs`
   })
 );
 
