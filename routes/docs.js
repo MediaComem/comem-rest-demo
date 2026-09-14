@@ -2,7 +2,7 @@ import debugFactory from 'debug';
 import express from 'express';
 import fs from 'fs';
 import path from 'path';
-import yaml from 'js-yaml';
+import * as yaml from 'js-yaml';
 import swaggerUi from 'swagger-ui-express';
 
 import * as config from '../config.js';

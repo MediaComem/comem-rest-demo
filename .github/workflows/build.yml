@@ -12,17 +12,17 @@ jobs:
     runs-on: ubuntu-24.04
     steps:
       - name: Checkout the repository
-        uses: actions/checkout@v5
+        uses: actions/checkout@v7
 
       - name: Start MongoDB
-        uses: supercharge/mongodb-github-action@1.11.0
+        uses: supercharge/mongodb-github-action@1.12.1
         with:
           mongodb-version: 8.0
 
       - name: Install asdf
         uses: asdf-vm/actions/install@v4
         with:
-          asdf_version: 0.18.0
+          asdf_version: 0.20.0
 
       - name: Install project dependencies
         run: |

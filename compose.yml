@@ -18,7 +18,7 @@ services:
       - '${ARCHIOWEB_DEMO_PORT:-3000}:3000'
 
   db:
-    image: mongo:7.0.14
+    image: mongo:8.0.32
     networks:
       - db
     volumes:

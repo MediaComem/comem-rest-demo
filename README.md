@@ -19,8 +19,8 @@ A demonstration RESTful API implemented with [Express][express].
 
 ## Requirements
 
-- [Node.js][node] 24.x
-- [MongoDB][mongo] 7.x or 8.x
+- [Node.js][node] 26.x
+- [MongoDB][mongo] 8.x
 
 ## Usage
 

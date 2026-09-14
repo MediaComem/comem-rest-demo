@@ -1,4 +1,3 @@
-import bodyParser from 'body-parser';
 import express from 'express';
 import logger from 'morgan';
 import mongoose from 'mongoose';
@@ -29,8 +28,8 @@ app.set('view engine', 'pug');
 if (config.env !== 'test') {
   app.use(logger('dev'));
 }
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
 
 // REST API routes
 app.use('/api/movies', moviesApi);
