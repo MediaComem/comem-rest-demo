@@ -1,13 +1,20 @@
 # https://docs.docker.com/build/concepts/context/#dockerignore-files
 /.ackrc
-/.github
 /compose.yml
 /coverage
+/.dockerignore
+/.DS_Store
 /.editorconfig
+/.git
+/.github
+/.gitignore
 /jest.config.json
+/LICENSE.txt
 /node_modules
 /nodemon.json
-/.prettierignoer
+/.prettierignore
 /.prettierrc.yml
+/README.md
 /tests
+/tmp
 /.tool-versions

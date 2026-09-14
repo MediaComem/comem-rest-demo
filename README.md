@@ -63,13 +63,11 @@ This application has an automated test suite which you can run with `npm test`.
 It will attempt to connect to the MongoDB database at
 `mongodb://localhost/comem-rest-demo-test`.
 
-The tests are implemented with [Mocha][mocha], [Chai][chai] and
-[SuperTest][supertest].
+The tests are implemented with [Jest][jest] and [SuperTest][supertest].
 
-[chai]: https://www.chaijs.com
 [docs]: https://demo.archioweb.ch
 [express]: https://expressjs.com
-[mocha]: https://mochajs.org
+[jest]: https://jestjs.io
 [mongo]: https://www.mongodb.com
 [node]: https://nodejs.org
 [supertest]: https://github.com/visionmedia/supertest#readme

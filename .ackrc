@@ -1,3 +1,4 @@
+# https://beyondgrep.com
 --ignore-dir=coverage
---ignore-dir=docs
---ignore-dir=.nyc_output
+--ignore-dir=node_modules
+--ignore-dir=tmp

@@ -1,5 +1,4 @@
 # https://git-scm.com/docs/gitignore
 /coverage
 /node_modules
-/.nyc_output
 /tmp
