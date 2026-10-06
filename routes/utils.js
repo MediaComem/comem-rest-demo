@@ -30,7 +30,8 @@ export function getPaginationParameters(req) {
 
   // Parse the "pageSize" URL query parameter indicating how many elements should be in the response
   let pageSize = parseInt(req.query.pageSize, 10);
-  if (isNaN(pageSize) || pageSize < 0 || pageSize > 100) {
+  // (0 is not allowed: a limit of 0 means "no limit" to MongoDB)
+  if (isNaN(pageSize) || pageSize < 1 || pageSize > 100) {
     pageSize = 100;
   }
 

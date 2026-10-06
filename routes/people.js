@@ -44,28 +44,9 @@ router.get('/', async (req, res) => {
         as: 'directedMovies'
       }
     },
-    {
-      $unwind: {
-        path: '$directedMovies',
-        // Preserve people who have not directed any movie
-        // ("directedMovies" will be null).
-        preserveNullAndEmptyArrays: true
-      }
-    },
-    // Replace "directedMovies" by 1 when set, or by 0 when null.
-    { $addFields: { directedMovies: { $cond: { if: '$directedMovies', then: 1, else: 0 } } } },
-    {
-      $group: {
-        _id: '$_id',
-        birthDate: { $first: '$birthDate' },
-        createdAt: { $first: '$createdAt' },
-        // Sum the 1s and 0s in the "directedMovies" property
-        // to obtain the final count.
-        directedMovies: { $sum: '$directedMovies' },
-        gender: { $first: '$gender' },
-        name: { $first: '$name' }
-      }
-    },
+    // Replace the "directedMovies" array by its size (0 for people who have
+    // not directed any movie).
+    { $set: { directedMovies: { $size: '$directedMovies' } } },
     { $sort: { name: 1 } },
     { $skip: (page - 1) * pageSize },
     { $limit: pageSize }
