@@ -9,7 +9,10 @@ on:
 jobs:
   build:
     name: build
-    runs-on: ubuntu-24.04
+    # MongoDB 8 does not start on the kernel of recent ubuntu-24.04 runner
+    # images. Go back to ubuntu-24.04 once this is fixed:
+    # https://github.com/supercharge/mongodb-github-action/issues/81
+    runs-on: ubuntu-22.04
     steps:
       - name: Checkout the repository
         uses: actions/checkout@v7
