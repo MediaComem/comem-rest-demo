@@ -60,14 +60,15 @@ Read the [full documentation][docs] to know more.
 
 This application has an automated test suite which you can run with `npm test`.
 
-It will attempt to connect to the MongoDB database at
-`mongodb://localhost/comem-rest-demo-test`.
+It loads the environment variables in `.env.test` and will attempt to connect
+to the MongoDB database at `mongodb://localhost/comem-rest-demo-test`.
 
-The tests are implemented with [Jest][jest] and [SuperTest][supertest].
+The tests are implemented with the [Node.js test runner][node-test] and
+[SuperTest][supertest].
 
 [docs]: https://demo.archioweb.ch
 [express]: https://expressjs.com
-[jest]: https://jestjs.io
 [mongo]: https://www.mongodb.com
 [node]: https://nodejs.org
-[supertest]: https://github.com/visionmedia/supertest#readme
+[node-test]: https://nodejs.org/docs/latest-v26.x/api/test.html
+[supertest]: https://github.com/forwardemail/supertest#readme

@@ -10,7 +10,7 @@
     "format:write": "prettier --config ./.prettierrc.yml --write .",
     "nodemon": "cross-env AUTH_TOKEN=secret DEBUG=demo:* nodemon",
     "start": "node ./bin/www.js",
-    "test": "cross-env NODE_ENV=test NODE_OPTIONS=--experimental-vm-modules jest"
+    "test": "node --env-file=.env.test --test --test-concurrency=1 --experimental-test-coverage --test-coverage-exclude=tests/**"
   },
   "dependencies": {
     "debug": "^4.4.3",
@@ -25,7 +25,6 @@
   "devDependencies": {
     "cross-env": "^10.1.0",
     "doctoc": "^2.5.0",
-    "jest": "^30.5.1",
     "nodemon": "^3.1.14",
     "prettier": "^3.9.6",
     "supertest": "^7.2.2"

@@ -8,7 +8,7 @@
 /.git
 /.github
 /.gitignore
-/jest.config.json
+/.env.test
 /LICENSE.txt
 /node_modules
 /nodemon.json
