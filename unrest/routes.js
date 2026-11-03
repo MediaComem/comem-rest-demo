@@ -38,9 +38,11 @@ router.get('/person/:id', (req, res) => {
     return res.status(404).send(`No person found with ID ${req.params.id}`);
   }
 
+  // Pretend to update the person's first name: only the response changes, so
+  // that this demonstration does not actually modify anything.
   const newFirstName = req.query.updateFirstName;
   if (newFirstName) {
-    person.firstName = newFirstName;
+    return res.send({ ...person, firstName: newFirstName });
   }
 
   res.send(person);

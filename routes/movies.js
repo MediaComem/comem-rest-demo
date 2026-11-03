@@ -36,8 +36,11 @@ router.get('/', async (req, res) => {
   // Parse pagination parameters from URL query parameters
   const { page, pageSize } = utils.getPaginationParameters(req);
 
-  // Apply the pagination to the database query
-  query = query.skip((page - 1) * pageSize).limit(pageSize);
+  // Sort movies by title, then apply the pagination to the database query
+  query = query
+    .sort({ title: 1 })
+    .skip((page - 1) * pageSize)
+    .limit(pageSize);
 
   // Add the Link header to the response
   utils.addLinkHeader('/api/movies', page, pageSize, total, res);

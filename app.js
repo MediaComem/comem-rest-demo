@@ -14,7 +14,8 @@ import unrestRoutes from './unrest/routes.js';
 // Connect to the database (can be overriden from environment)
 mongoose.connect(config.databaseUrl);
 
-if (config.debug) {
+// Log database queries (except in test mode).
+if (config.debug && config.env !== 'test') {
   mongoose.set('debug', true);
 }
 
@@ -25,6 +26,7 @@ app.set('views', path.join(config.projectRoot, 'views'));
 app.set('view engine', 'pug');
 
 // General middlewares
+// Log requests (except in test mode).
 if (config.env !== 'test') {
   app.use(logger('dev'));
 }
@@ -55,8 +57,10 @@ app.use(function (req, res, next) {
 
 // API error handler (responds with JSON)
 app.use('/api', function (err, req, res, next) {
-  // Log the error on stderr
-  console.warn(err);
+  // Log the error on stderr (except in test mode).
+  if (config.env !== 'test') {
+    console.warn(err);
+  }
 
   // Respond with 422 Unprocessable Entity if it's a Mongoose validation error
   if (err.name == 'ValidationError' && !err.status) {
